@@ -1,75 +1,39 @@
-"""
-Logging Configuration for Data Pipeline
-"""
 import logging
-import os
 import sys
-from datetime import datetime
+import os
 
-def setup_logging(log_file='logs/pipeline.log', log_level='INFO'):
+# Define the log stage utility used extensively in data modules
+def log_stage(logger, stage, status, **kwargs):
+    """Logs the status of a specific processing stage with key metrics."""
+    details = ", ".join(f"{k}={v}" for k, v in kwargs.items())
+    logger.info(f"[{stage:<20}] {status:<8} | {details}")
+
+def setup_logging(log_file="logs/pipeline.log", log_level="INFO"):
     """
-    Setup logging configuration with both console and file handlers
-    
-    Args:
-        log_file: Path to log file
-        log_level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-    
-    Returns:
-        logger: Configured logger instance
+    Sets up the project-wide logging configuration based on config.
     """
-    # Create logs directory
-    os.makedirs('logs', exist_ok=True)
+    level = getattr(logging, log_level.upper(), logging.INFO)
     
-    # Create logger
-    logger = logging.getLogger('Member3Pipeline')
-    logger.setLevel(getattr(logging, log_level.upper()))
+    # Resolve log file path relative to the project root
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    full_log_file = os.path.join(project_root, log_file)
+    os.makedirs(os.path.dirname(full_log_file), exist_ok=True)
     
-    # Clear existing handlers
-    if logger.handlers:
-        logger.handlers.clear()
+    # 1. Clear any existing handlers to prevent duplicate logs
+    root_logger = logging.getLogger()
+    if root_logger.handlers:
+        for handler in root_logger.handlers:
+            root_logger.removeHandler(handler)
     
-    # Console handler
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(logging.INFO)
-    console_format = logging.Formatter(
-        '%(asctime)s | %(levelname)-8s | %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
+    # 2. Configure the logger
+    logging.basicConfig(
+        level=level,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(full_log_file, mode='a'),
+            logging.StreamHandler(sys.stdout)
+        ]
     )
-    console_handler.setFormatter(console_format)
-    logger.addHandler(console_handler)
-    
-    # File handler
-    file_handler = logging.FileHandler(log_file, mode='a')
-    file_handler.setLevel(logging.DEBUG)
-    file_format = logging.Formatter(
-        '%(asctime)s | %(name)s | %(levelname)s | %(funcName)s | %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
-    )
-    file_handler.setFormatter(file_format)
-    logger.addHandler(file_handler)
-    
+    logger = logging.getLogger("EquiRidePipeline")
+    logger.setLevel(level)
     return logger
-
-def log_stage(logger, stage_name, status, **kwargs):
-    """
-    Log pipeline stage with structured information
-    
-    Args:
-        logger: Logger instance
-        stage_name: Name of the pipeline stage
-        status: Status (START, SUCCESS, FAILURE)
-        **kwargs: Additional metadata to log
-    """
-    timestamp = datetime.now().isoformat()
-    
-    msg = f"[{stage_name}] {status}"
-    if kwargs:
-        details = " | ".join([f"{k}={v}" for k, v in kwargs.items()])
-        msg += f" | {details}"
-    
-    if status == 'SUCCESS':
-        logger.info(msg)
-    elif status == 'FAILURE':
-        logger.error(msg)
-    else:  # START or other
-        logger.info(msg)
