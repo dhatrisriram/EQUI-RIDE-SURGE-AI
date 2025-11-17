@@ -199,7 +199,7 @@ if not alerts_map_df.empty:
     if not critical.empty:
         layers.append(pdk.Layer("ScatterplotLayer", data=critical, get_position=["lon", "lat"], get_radius=400, get_fill_color=[255, 0, 0, 180], stroked=True, get_line_color=[255, 255, 255], line_width_min_pixels=3, pickable=True))
 
-deck = pdk.Deck(layers=layers, initial_view_state=view_state, map_style="mapbox://styles/mapbox/dark-v10", tooltip={"html": "<b>Zone:</b> {name}<br/><b>Surge:</b> {surge}"})
+deck = pdk.Deck(layers=layers, initial_view_state=view_state, tooltip={"html": "<b>Zone:</b> {name}<br/><b>Surge:</b> {surge}"})
 st.pydeck_chart(deck)
 
 # --- 9. LOWER SECTION: FLEET OPS & DISPATCH ---

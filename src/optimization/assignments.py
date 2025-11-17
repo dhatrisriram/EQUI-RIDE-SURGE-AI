@@ -208,11 +208,11 @@ def get_repositioning_plan():
         return pd.DataFrame()
         
     # Fetch deterministic data inputs from src/data/utils.py
-    drivers = get_current_available_drivers(num_drivers=67) 
+    drivers = get_current_available_drivers(num_drivers=100) 
     zones = get_target_zones()
     anomaly_flags = get_zone_anomaly_flags() 
     driver_history = get_driver_history_final()
-    eco_data = get_zone_eco_metrics() 
+    eco_data = get_zone_eco_metrics()
 
     if len(drivers) == 0 or len(zones) == 0:
         logger.warning("No drivers or zones available for planning.")

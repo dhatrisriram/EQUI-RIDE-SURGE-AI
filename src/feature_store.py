@@ -85,7 +85,8 @@ class FeatureStore:
     
     def insert_features(self, features_df: pd.DataFrame, batch_id: str):
         """
-        Inserts a new batch of features into the store, handling column selection.
+        Inserts a new batch of features into the store, handling column selection
+        and utilizing INSERT OR REPLACE to avoid unique constraint violations.
         """
         if features_df.empty or self.conn is None:
             self.logger.warning(f"[{self.module_name}] No features to insert or DB connection is closed.")
@@ -107,21 +108,37 @@ class FeatureStore:
                 'bookings_lag_1': 'bookings_lag_1'
             }, errors='ignore').copy()
             
-            final_insert_df = insert_df[sql_cols].copy()
+            # Filter to ensure we only select columns that exist in the DataFrame
+            available_cols = [c for c in sql_cols if c in insert_df.columns]
+            final_insert_df = insert_df[available_cols].copy()
+            
+            # Ensure timestamp is string format for SQLite
             final_insert_df['timestamp'] = final_insert_df['timestamp'].astype(str)
             
-            # Use append mode, assuming primary key constraint handles duplicates (REPLACE strategy)
-            records_inserted = len(final_insert_df)
-            final_insert_df.to_sql(
-                self.table_name, 
-                self.conn, 
-                if_exists='append', 
-                index=False
-            )
+            # --- FIX: Use INSERT OR REPLACE logic ---
+            # We cannot use to_sql(if_exists='append') because it fails on duplicates.
+            # We define the query manually to use the upsert capability.
+            
+            placeholders = ', '.join(['?'] * len(available_cols))
+            columns_formatted = ', '.join(available_cols)
+            
+            query = f"""
+                INSERT OR REPLACE INTO {self.table_name} 
+                ({columns_formatted}) 
+                VALUES ({placeholders})
+            """
+            
+            # Convert DataFrame to list of tuples for executemany
+            # We use itertuples(index=False) to get standard Python types where possible
+            data_to_insert = list(final_insert_df.itertuples(index=False, name=None))
+            
+            cursor = self.conn.cursor()
+            cursor.executemany(query, data_to_insert)
             self.conn.commit()
 
+            records_inserted = len(data_to_insert)
+
             # Log successful ingestion
-            cursor = self.conn.cursor()
             cursor.execute('''
                 INSERT INTO ingestion_log (batch_id, records_inserted)
                 VALUES (?, ?)

@@ -15651,3 +15651,1296 @@ OUTPUT FILES:
 2025-11-17 18:23:37,260 - EquiRidePipeline - INFO -    Forecast predictions: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
 2025-11-17 18:23:37,260 - EquiRidePipeline - INFO -    Repositioning Plan: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/repositioning_plan.csv
 2025-11-17 18:23:37,262 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:36:46,150 - EquiRidePipeline - INFO - 
+2025-11-17 18:36:46,151 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:36:46,151 - EquiRidePipeline - INFO -           EQUI-RIDE SURGE AI - FULL PRODUCTION RUN          
+2025-11-17 18:36:46,151 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:36:46,152 - EquiRidePipeline - INFO - Pipeline started at: 2025-11-17 18:36:46
+2025-11-17 18:36:46,152 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:36:46,152 - EquiRidePipeline - INFO - 
+2025-11-17 18:36:46,154 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:36:46,155 - EquiRidePipeline - INFO - STAGE 1: DATA CLEANING & ALIGNMENT
+2025-11-17 18:36:46,155 - EquiRidePipeline - INFO - 
+========================================
+2025-11-17 18:36:46,155 - EquiRidePipeline - INFO - [DataCleaner] Starting full cleaning pipeline.
+2025-11-17 18:36:46,156 - EquiRidePipeline - INFO - ========================================
+2025-11-17 18:36:46,156 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] START    | file=C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/Data_set.csv
+2025-11-17 18:36:46,289 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] SUCCESS  | rows=18000, cols=41
+2025-11-17 18:36:46,289 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] START    | 
+2025-11-17 18:36:46,501 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] SUCCESS  | 
+2025-11-17 18:36:46,503 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] START    | 
+2025-11-17 18:36:46,533 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] SUCCESS  | removed=0
+2025-11-17 18:36:46,535 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] START    | 
+2025-11-17 18:36:46,557 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] SUCCESS  | 
+2025-11-17 18:36:46,559 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] START    | 
+2025-11-17 18:36:46,573 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] SUCCESS  | 
+2025-11-17 18:36:46,575 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] START    | 
+2025-11-17 18:36:46,625 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] SUCCESS  | filled=0
+2025-11-17 18:36:47,154 - EquiRidePipeline - INFO - [DataCleaner] SUCCESS: Cleaned data saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 records.
+2025-11-17 18:36:47,155 - EquiRidePipeline - INFO - SUCCESS Stage 1 Complete: 18000 records cleaned
+2025-11-17 18:36:47,155 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:36:47,155 - EquiRidePipeline - INFO - STAGE 2: FEATURE ENGINEERING
+2025-11-17 18:36:47,156 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:36:47,156 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - STARTED
+2025-11-17 18:36:47,156 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:36:47,420 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 rows.
+2025-11-17 18:36:47,420 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] START    | 
+2025-11-17 18:36:47,426 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] FAILURE  | error="drivers'_earnings"
+2025-11-17 18:36:47,427 - EquiRidePipeline - ERROR - FAILED Feature engineering failed: "drivers'_earnings"
+2025-11-17 18:36:47,431 - EquiRidePipeline - INFO - SUCCESS Stage 2 Complete: 0 features generated
+2025-11-17 18:36:47,431 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:36:47,432 - EquiRidePipeline - INFO - STAGE 3: FEATURE STORE MANAGEMENT
+2025-11-17 18:36:47,433 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Connected to feature store: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\data/feature_store/surge_features.db
+2025-11-17 18:36:47,433 - EquiRidePipeline - INFO - [CREATE_TABLES       ] START    | 
+2025-11-17 18:36:47,435 - EquiRidePipeline - INFO - [CREATE_TABLES       ] SUCCESS  | 
+2025-11-17 18:36:47,435 - EquiRidePipeline - WARNING - [FeatureStore] No features to insert or DB connection is closed.
+2025-11-17 18:36:47,435 - EquiRidePipeline - INFO - SUCCESS Stage 3 Complete: 0 records inserted into feature store
+2025-11-17 18:36:47,436 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:36:47,436 - EquiRidePipeline - INFO - STAGE 4: MODEL INFERENCE (HYBRID ENSEMBLE)
+2025-11-17 18:36:47,437 - src.models.infer - INFO - Starting HYBRID ENSEMBLE inference (LGBM + GNN) using features from datasets/engineered_features.csv...
+2025-11-17 18:36:47,725 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 18:36:47,743 - src.models.infer - ERROR - LGBM Prediction failed (src/models/lgb_bookings_1step.pkl). Using zero array: Error loading LightGBM PKL model: Could not find module 'C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\.venv\Lib\site-packages\lightgbm\bin\lib_lightgbm.dll' (or one of its dependencies). Try using the full path with constructor syntax.
+2025-11-17 18:36:47,753 - src.utils - ERROR - Error loading PyTorch PT model: Error(s) in loading state_dict for GraphWaveNet:
+	Missing key(s) in state_dict: "head.1.weight", "head.1.bias". 
+	Unexpected key(s) in state_dict: "proj.weight", "proj.bias", "gconv.linears.2.weight", "gconv.linears.2.bias". 
+	size mismatch for temp_conv1.weight: copying a param with shape torch.Size([64, 10, 3]) from checkpoint, the shape in current model is torch.Size([32, 10, 1, 1]).
+	size mismatch for temp_conv1.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([32]).
+	size mismatch for temp_conv2.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([32, 10, 1, 1]).
+	size mismatch for temp_conv2.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([32]).
+	size mismatch for temp_conv3.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([32, 10, 1, 1]).
+	size mismatch for temp_conv3.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([32]).
+	size mismatch for gconv.linears.0.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([128, 160]).
+	size mismatch for gconv.linears.1.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([32, 128]).
+	size mismatch for gconv.linears.1.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([32]).
+	size mismatch for head.2.weight: copying a param with shape torch.Size([1, 128]) from checkpoint, the shape in current model is torch.Size([1, 512, 1, 1]).
+2025-11-17 18:36:47,754 - src.models.infer - ERROR - GNN Prediction failed (src/models/gwn_L12.pt). Using zero array: Error loading PyTorch PT model: Error(s) in loading state_dict for GraphWaveNet:
+	Missing key(s) in state_dict: "head.1.weight", "head.1.bias". 
+	Unexpected key(s) in state_dict: "proj.weight", "proj.bias", "gconv.linears.2.weight", "gconv.linears.2.bias". 
+	size mismatch for temp_conv1.weight: copying a param with shape torch.Size([64, 10, 3]) from checkpoint, the shape in current model is torch.Size([32, 10, 1, 1]).
+	size mismatch for temp_conv1.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([32]).
+	size mismatch for temp_conv2.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([32, 10, 1, 1]).
+	size mismatch for temp_conv2.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([32]).
+	size mismatch for temp_conv3.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([32, 10, 1, 1]).
+	size mismatch for temp_conv3.bias: copying a param with shape torch.Size([64]) from checkpoint, the shape in current model is torch.Size([32]).
+	size mismatch for gconv.linears.0.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([128, 160]).
+	size mismatch for gconv.linears.1.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([32, 128]).
+	size mismatch for gconv.linears.1.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([32]).
+	size mismatch for head.2.weight: copying a param with shape torch.Size([1, 128]) from checkpoint, the shape in current model is torch.Size([1, 512, 1, 1]).
+2025-11-17 18:36:47,764 - src.models.infer - INFO - Hybrid inference complete. Predictions saved for 3 zones to datasets/forecast_15min_predictions.csv
+2025-11-17 18:36:47,768 - EquiRidePipeline - INFO - SUCCESS Stage 4 Complete: Hybrid Forecast predictions ready at datasets/forecast_15min_predictions.csv
+2025-11-17 18:36:47,769 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:36:47,769 - EquiRidePipeline - INFO - STAGE 5: DRIVER REPOSITIONING OPTIMIZATION (PROFIT, FAIRNESS, ECO)
+2025-11-17 18:36:47,769 - src.optimization.assignments - INFO - Fetching inputs for Repositioning Plan generation...
+2025-11-17 18:36:47,773 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv with 3 rows.
+2025-11-17 18:36:47,774 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:36:47,776 - src.data.utils - INFO - Generated 67 deterministic available drivers.
+2025-11-17 18:36:47,778 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:36:47,779 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:36:48,087 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 18:36:48,090 - src.data.utils - ERROR - Anomaly flags derivation failed: 'bookings'. Using fixed deterministic flags.
+2025-11-17 18:36:48,093 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:36:48,094 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 18:36:48,094 - src.data.utils - INFO - Generated deterministic driver history for 100 drivers.
+2025-11-17 18:36:48,095 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:36:48,095 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 18:36:48,096 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:36:48,096 - src.data.utils - INFO - Generated deterministic driver-to-zone distance matrix shape: (100, 67)
+2025-11-17 18:36:48,100 - src.optimization.assignments - WARNING - Eco data shape mismatch: (100, 67) != (67, 67). Using default 10km distances.
+2025-11-17 18:36:48,117 - src.optimization.assignments - INFO - Assignments completed: 67 drivers assigned.
+2025-11-17 18:36:48,122 - EquiRidePipeline - INFO - SUCCESS Stage 5 Complete: Repositioning Plan saved to datasets/repositioning_plan.csv
+2025-11-17 18:36:48,122 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:36:48,123 - EquiRidePipeline - INFO - STAGE 6: SURGE ALERT DETECTION & NOTIFICATION
+2025-11-17 18:36:48,137 - EquiRidePipeline - INFO - SUCCESS Twilio client initialized successfully.
+2025-11-17 18:36:48,139 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] START    | 
+2025-11-17 18:36:48,141 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] SUCCESS  | alerts_found=0
+2025-11-17 18:36:48,141 - EquiRidePipeline - INFO - No forecast surge detected above threshold.
+2025-11-17 18:36:48,142 - EquiRidePipeline - INFO - SUCCESS Stage 6 Complete: 0 forecast-based alerts processed
+2025-11-17 18:36:48,142 - EquiRidePipeline - INFO - 
+================================================================================
+2025-11-17 18:36:48,143 - EquiRidePipeline - INFO -  PIPELINE COMPLETED SUCCESSFULLY
+2025-11-17 18:36:48,143 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:36:48,144 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Feature store connection closed
+2025-11-17 18:36:48,144 - EquiRidePipeline - INFO - End time: 2025-11-17 18:36:48
+2025-11-17 18:36:48,145 - EquiRidePipeline - INFO - 
+SUMMARY:
+2025-11-17 18:36:48,145 - EquiRidePipeline - INFO -    Records processed: 0
+2025-11-17 18:36:48,146 - EquiRidePipeline - INFO -    Features generated: 0
+2025-11-17 18:36:48,146 - EquiRidePipeline - INFO -    Batch ID: batch_20251117_183646
+2025-11-17 18:36:48,146 - EquiRidePipeline - INFO -    Alerts processed: 0
+2025-11-17 18:36:48,147 - EquiRidePipeline - INFO -    Repositioning Plan created: 67 assignments
+2025-11-17 18:36:48,147 - EquiRidePipeline - INFO - 
+OUTPUT FILES:
+2025-11-17 18:36:48,147 - EquiRidePipeline - INFO -    Processed data: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv
+2025-11-17 18:36:48,148 - EquiRidePipeline - INFO -    Engineered features: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 18:36:48,148 - EquiRidePipeline - INFO -    Forecast predictions: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 18:36:48,148 - EquiRidePipeline - INFO -    Repositioning Plan: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/repositioning_plan.csv
+2025-11-17 18:36:48,148 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:45:42,099 - EquiRidePipeline - INFO - 
+2025-11-17 18:45:42,100 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:45:42,101 - EquiRidePipeline - INFO -           EQUI-RIDE SURGE AI - FULL PRODUCTION RUN          
+2025-11-17 18:45:42,101 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:45:42,101 - EquiRidePipeline - INFO - Pipeline started at: 2025-11-17 18:45:42
+2025-11-17 18:45:42,101 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:45:42,101 - EquiRidePipeline - INFO - 
+2025-11-17 18:45:42,104 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:45:42,104 - EquiRidePipeline - INFO - STAGE 1: DATA CLEANING & ALIGNMENT
+2025-11-17 18:45:42,104 - EquiRidePipeline - INFO - 
+========================================
+2025-11-17 18:45:42,105 - EquiRidePipeline - INFO - [DataCleaner] Starting full cleaning pipeline.
+2025-11-17 18:45:42,105 - EquiRidePipeline - INFO - ========================================
+2025-11-17 18:45:42,105 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] START    | file=C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/Data_set.csv
+2025-11-17 18:45:42,231 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] SUCCESS  | rows=18000, cols=41
+2025-11-17 18:45:42,231 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] START    | 
+2025-11-17 18:45:42,455 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] SUCCESS  | 
+2025-11-17 18:45:42,456 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] START    | 
+2025-11-17 18:45:42,492 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] SUCCESS  | removed=0
+2025-11-17 18:45:42,494 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] START    | 
+2025-11-17 18:45:42,512 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] SUCCESS  | 
+2025-11-17 18:45:42,513 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] START    | 
+2025-11-17 18:45:42,533 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] SUCCESS  | 
+2025-11-17 18:45:42,536 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] START    | 
+2025-11-17 18:45:42,605 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] SUCCESS  | filled=0
+2025-11-17 18:45:43,114 - EquiRidePipeline - INFO - [DataCleaner] SUCCESS: Cleaned data saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 records.
+2025-11-17 18:45:43,114 - EquiRidePipeline - INFO - SUCCESS Stage 1 Complete: 18000 records cleaned
+2025-11-17 18:45:43,115 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:45:43,115 - EquiRidePipeline - INFO - STAGE 2: FEATURE ENGINEERING
+2025-11-17 18:45:43,115 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:45:43,116 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - STARTED
+2025-11-17 18:45:43,116 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:45:43,274 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 rows.
+2025-11-17 18:45:43,275 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] START    | 
+2025-11-17 18:45:43,281 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] SUCCESS  | features=6
+2025-11-17 18:45:43,282 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] START    | 
+2025-11-17 18:45:43,312 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] SUCCESS  | features=4
+2025-11-17 18:45:43,313 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] START    | 
+2025-11-17 18:45:43,903 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] SUCCESS  | features=40
+2025-11-17 18:45:43,903 - EquiRidePipeline - INFO - [LAG_FEATURES        ] START    | 
+2025-11-17 18:45:43,923 - EquiRidePipeline - INFO - [LAG_FEATURES        ] SUCCESS  | features=16
+2025-11-17 18:45:43,924 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] START    | 
+2025-11-17 18:45:43,931 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] SUCCESS  | features=4
+2025-11-17 18:45:43,933 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] START    | 
+2025-11-17 18:45:44,017 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] SUCCESS  | features=4, anomalies_detected=762
+2025-11-17 18:45:44,017 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] START    | 
+2025-11-17 18:45:44,024 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] SUCCESS  | features=4
+2025-11-17 18:45:45,969 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:45:45,970 - EquiRidePipeline - INFO - SUCCESS Engineered features saved: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 18:45:45,971 - EquiRidePipeline - INFO - SUCCESS Shape: (18000, 126)
+2025-11-17 18:45:45,972 - EquiRidePipeline - INFO - SUCCESS New features created: 78
+2025-11-17 18:45:45,972 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - COMPLETED
+2025-11-17 18:45:45,973 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:45:45,973 - EquiRidePipeline - INFO - SUCCESS Stage 2 Complete: 126 features generated
+2025-11-17 18:45:45,974 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:45:45,975 - EquiRidePipeline - INFO - STAGE 3: FEATURE STORE MANAGEMENT
+2025-11-17 18:45:45,978 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Connected to feature store: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\data/feature_store/surge_features.db
+2025-11-17 18:45:45,979 - EquiRidePipeline - INFO - [CREATE_TABLES       ] START    | 
+2025-11-17 18:45:45,981 - EquiRidePipeline - INFO - [CREATE_TABLES       ] SUCCESS  | 
+2025-11-17 18:45:45,982 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] START    | batch=batch_20251117_184542
+2025-11-17 18:45:46,088 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] FAILURE  | error=UNIQUE constraint failed: engineered_features.timestamp, engineered_features.h3_index
+2025-11-17 18:45:46,088 - EquiRidePipeline - ERROR - [FeatureStore] SQL Error: UNIQUE constraint failed: engineered_features.timestamp, engineered_features.h3_index
+2025-11-17 18:45:46,090 - EquiRidePipeline - ERROR - 
+================================================================================
+2025-11-17 18:45:46,091 - EquiRidePipeline - ERROR - PIPELINE FAILED
+2025-11-17 18:45:46,091 - EquiRidePipeline - ERROR - ================================================================================
+2025-11-17 18:45:46,092 - EquiRidePipeline - ERROR - Error: UNIQUE constraint failed: engineered_features.timestamp, engineered_features.h3_index
+2025-11-17 18:45:46,099 - EquiRidePipeline - ERROR - Traceback (most recent call last):
+  File "C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\orchestration\run_pipeline.py", line 106, in run_complete_pipeline
+    records_inserted = store.insert_features(features_df, batch_id=batch_id)
+  File "C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\src\feature_store.py", line 115, in insert_features
+    final_insert_df.to_sql(
+    ~~~~~~~~~~~~~~~~~~~~~~^
+        self.table_name,
+        ^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        index=False
+        ^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\.venv\Lib\site-packages\pandas\util\_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\.venv\Lib\site-packages\pandas\core\generic.py", line 3109, in to_sql
+    return sql.to_sql(
+           ~~~~~~~~~~^
+        self,
+        ^^^^^
+    ...<8 lines>...
+        method=method,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\.venv\Lib\site-packages\pandas\io\sql.py", line 844, in to_sql
+    return pandas_sql.to_sql(
+           ~~~~~~~~~~~~~~~~~^
+        frame,
+        ^^^^^^
+    ...<9 lines>...
+        **engine_kwargs,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\.venv\Lib\site-packages\pandas\io\sql.py", line 2841, in to_sql
+    return table.insert(chunksize, method)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\.venv\Lib\site-packages\pandas\io\sql.py", line 1121, in insert
+    num_inserted = exec_insert(conn, keys, chunk_iter)
+  File "C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\.venv\Lib\site-packages\pandas\io\sql.py", line 2537, in _execute_insert
+    conn.executemany(self.insert_statement(num_rows=1), data_list)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: UNIQUE constraint failed: engineered_features.timestamp, engineered_features.h3_index
+
+2025-11-17 18:45:46,112 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Feature store connection closed
+2025-11-17 18:45:46,114 - EquiRidePipeline - INFO - End time: 2025-11-17 18:45:46
+2025-11-17 18:45:46,114 - EquiRidePipeline - INFO - 
+SUMMARY:
+2025-11-17 18:45:46,114 - EquiRidePipeline - INFO -    Records processed: 18000
+2025-11-17 18:45:46,115 - EquiRidePipeline - INFO -    Features generated: 126
+2025-11-17 18:45:46,115 - EquiRidePipeline - INFO -    Batch ID: batch_20251117_184542
+2025-11-17 18:45:46,115 - EquiRidePipeline - INFO -    Alerts processed: 0
+2025-11-17 18:45:46,116 - EquiRidePipeline - INFO -    Repositioning Plan created: 0 assignments
+2025-11-17 18:45:46,117 - EquiRidePipeline - INFO - 
+OUTPUT FILES:
+2025-11-17 18:45:46,117 - EquiRidePipeline - INFO -    Processed data: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv
+2025-11-17 18:45:46,118 - EquiRidePipeline - INFO -    Engineered features: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 18:45:46,118 - EquiRidePipeline - INFO -    Forecast predictions: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 18:45:46,118 - EquiRidePipeline - INFO -    Repositioning Plan: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/repositioning_plan.csv
+2025-11-17 18:45:46,119 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:48:14,377 - EquiRidePipeline - INFO - 
+2025-11-17 18:48:14,378 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:48:14,378 - EquiRidePipeline - INFO -           EQUI-RIDE SURGE AI - FULL PRODUCTION RUN          
+2025-11-17 18:48:14,378 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:48:14,378 - EquiRidePipeline - INFO - Pipeline started at: 2025-11-17 18:48:14
+2025-11-17 18:48:14,379 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:48:14,379 - EquiRidePipeline - INFO - 
+2025-11-17 18:48:14,381 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:48:14,381 - EquiRidePipeline - INFO - STAGE 1: DATA CLEANING & ALIGNMENT
+2025-11-17 18:48:14,382 - EquiRidePipeline - INFO - 
+========================================
+2025-11-17 18:48:14,382 - EquiRidePipeline - INFO - [DataCleaner] Starting full cleaning pipeline.
+2025-11-17 18:48:14,382 - EquiRidePipeline - INFO - ========================================
+2025-11-17 18:48:14,383 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] START    | file=C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/Data_set.csv
+2025-11-17 18:48:14,497 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] SUCCESS  | rows=18000, cols=41
+2025-11-17 18:48:14,498 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] START    | 
+2025-11-17 18:48:14,708 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] SUCCESS  | 
+2025-11-17 18:48:14,710 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] START    | 
+2025-11-17 18:48:14,744 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] SUCCESS  | removed=0
+2025-11-17 18:48:14,747 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] START    | 
+2025-11-17 18:48:14,769 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] SUCCESS  | 
+2025-11-17 18:48:14,770 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] START    | 
+2025-11-17 18:48:14,786 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] SUCCESS  | 
+2025-11-17 18:48:14,787 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] START    | 
+2025-11-17 18:48:14,828 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] SUCCESS  | filled=0
+2025-11-17 18:48:15,318 - EquiRidePipeline - INFO - [DataCleaner] SUCCESS: Cleaned data saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 records.
+2025-11-17 18:48:15,319 - EquiRidePipeline - INFO - SUCCESS Stage 1 Complete: 18000 records cleaned
+2025-11-17 18:48:15,319 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:48:15,319 - EquiRidePipeline - INFO - STAGE 2: FEATURE ENGINEERING
+2025-11-17 18:48:15,320 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:48:15,320 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - STARTED
+2025-11-17 18:48:15,321 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:48:15,486 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 rows.
+2025-11-17 18:48:15,487 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] START    | 
+2025-11-17 18:48:15,493 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] SUCCESS  | features=6
+2025-11-17 18:48:15,493 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] START    | 
+2025-11-17 18:48:15,529 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] SUCCESS  | features=4
+2025-11-17 18:48:15,530 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] START    | 
+2025-11-17 18:48:16,085 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] SUCCESS  | features=40
+2025-11-17 18:48:16,085 - EquiRidePipeline - INFO - [LAG_FEATURES        ] START    | 
+2025-11-17 18:48:16,109 - EquiRidePipeline - INFO - [LAG_FEATURES        ] SUCCESS  | features=16
+2025-11-17 18:48:16,110 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] START    | 
+2025-11-17 18:48:16,122 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] SUCCESS  | features=4
+2025-11-17 18:48:16,124 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] START    | 
+2025-11-17 18:48:16,196 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] SUCCESS  | features=4, anomalies_detected=762
+2025-11-17 18:48:16,197 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] START    | 
+2025-11-17 18:48:16,203 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] SUCCESS  | features=4
+2025-11-17 18:48:17,837 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:48:17,838 - EquiRidePipeline - INFO - SUCCESS Engineered features saved: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 18:48:17,838 - EquiRidePipeline - INFO - SUCCESS Shape: (18000, 126)
+2025-11-17 18:48:17,838 - EquiRidePipeline - INFO - SUCCESS New features created: 78
+2025-11-17 18:48:17,838 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - COMPLETED
+2025-11-17 18:48:17,838 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:48:17,839 - EquiRidePipeline - INFO - SUCCESS Stage 2 Complete: 126 features generated
+2025-11-17 18:48:17,839 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:48:17,839 - EquiRidePipeline - INFO - STAGE 3: FEATURE STORE MANAGEMENT
+2025-11-17 18:48:17,840 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Connected to feature store: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\data/feature_store/surge_features.db
+2025-11-17 18:48:17,841 - EquiRidePipeline - INFO - [CREATE_TABLES       ] START    | 
+2025-11-17 18:48:17,842 - EquiRidePipeline - INFO - [CREATE_TABLES       ] SUCCESS  | 
+2025-11-17 18:48:17,842 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] START    | batch=batch_20251117_184814
+2025-11-17 18:48:17,996 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] SUCCESS  | inserted=18000
+2025-11-17 18:48:17,999 - EquiRidePipeline - INFO - SUCCESS Stage 3 Complete: 18000 records inserted into feature store
+2025-11-17 18:48:18,000 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:48:18,000 - EquiRidePipeline - INFO - STAGE 4: MODEL INFERENCE (HYBRID ENSEMBLE)
+2025-11-17 18:48:18,001 - src.models.infer - INFO - Starting HYBRID ENSEMBLE inference (LGBM + GNN) using features from datasets/engineered_features.csv...
+2025-11-17 18:48:18,407 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 18:48:24,741 - src.models.infer - ERROR - LGBM Prediction failed (src/models/lgb_bookings_1step.pkl). Using zero array: Error loading LightGBM PKL model: STACK_GLOBAL requires str
+2025-11-17 18:48:24,756 - src.utils - ERROR - Error loading PyTorch PT model: Error(s) in loading state_dict for GraphWaveNet:
+	Missing key(s) in state_dict: "head.1.weight", "head.1.bias". 
+	Unexpected key(s) in state_dict: "proj.weight", "proj.bias", "gconv.linears.2.weight", "gconv.linears.2.bias". 
+	size mismatch for temp_conv1.weight: copying a param with shape torch.Size([64, 10, 3]) from checkpoint, the shape in current model is torch.Size([64, 10, 1, 1]).
+	size mismatch for temp_conv2.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([64, 10, 1, 1]).
+	size mismatch for temp_conv3.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([64, 10, 1, 1]).
+	size mismatch for gconv.linears.0.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([128, 320]).
+	size mismatch for gconv.linears.1.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([64, 128]).
+	size mismatch for gconv.linears.1.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([64]).
+	size mismatch for head.2.weight: copying a param with shape torch.Size([1, 128]) from checkpoint, the shape in current model is torch.Size([1, 128, 1, 1]).
+2025-11-17 18:48:24,757 - src.models.infer - ERROR - GNN Prediction failed (src/models/gwn_L12.pt). Using zero array: Error loading PyTorch PT model: Error(s) in loading state_dict for GraphWaveNet:
+	Missing key(s) in state_dict: "head.1.weight", "head.1.bias". 
+	Unexpected key(s) in state_dict: "proj.weight", "proj.bias", "gconv.linears.2.weight", "gconv.linears.2.bias". 
+	size mismatch for temp_conv1.weight: copying a param with shape torch.Size([64, 10, 3]) from checkpoint, the shape in current model is torch.Size([64, 10, 1, 1]).
+	size mismatch for temp_conv2.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([64, 10, 1, 1]).
+	size mismatch for temp_conv3.weight: copying a param with shape torch.Size([64, 64, 3]) from checkpoint, the shape in current model is torch.Size([64, 10, 1, 1]).
+	size mismatch for gconv.linears.0.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([128, 320]).
+	size mismatch for gconv.linears.1.weight: copying a param with shape torch.Size([128, 128]) from checkpoint, the shape in current model is torch.Size([64, 128]).
+	size mismatch for gconv.linears.1.bias: copying a param with shape torch.Size([128]) from checkpoint, the shape in current model is torch.Size([64]).
+	size mismatch for head.2.weight: copying a param with shape torch.Size([1, 128]) from checkpoint, the shape in current model is torch.Size([1, 128, 1, 1]).
+2025-11-17 18:48:24,762 - src.models.infer - INFO - Hybrid inference complete. Predictions saved for 3 zones to datasets/forecast_15min_predictions.csv
+2025-11-17 18:48:24,765 - EquiRidePipeline - INFO - SUCCESS Stage 4 Complete: Hybrid Forecast predictions ready at datasets/forecast_15min_predictions.csv
+2025-11-17 18:48:24,765 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:48:24,765 - EquiRidePipeline - INFO - STAGE 5: DRIVER REPOSITIONING OPTIMIZATION (PROFIT, FAIRNESS, ECO)
+2025-11-17 18:48:24,765 - src.optimization.assignments - INFO - Fetching inputs for Repositioning Plan generation...
+2025-11-17 18:48:24,769 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv with 3 rows.
+2025-11-17 18:48:24,770 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:48:24,770 - src.data.utils - INFO - Generated 67 deterministic available drivers.
+2025-11-17 18:48:24,771 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:48:24,772 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:48:25,095 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 18:48:25,100 - src.data.utils - INFO - Derived anomaly flags based on top 5 riskiest zones using bookings_lag_1.
+2025-11-17 18:48:25,104 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:48:25,105 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 18:48:25,106 - src.data.utils - INFO - Generated deterministic driver history for 100 drivers.
+2025-11-17 18:48:25,107 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:48:25,108 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 18:48:25,109 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:48:25,111 - src.data.utils - INFO - Generated deterministic driver-to-zone distance matrix shape: (100, 67)
+2025-11-17 18:48:25,114 - src.optimization.assignments - WARNING - Eco data shape mismatch: (100, 67) != (67, 67). Using default 10km distances.
+2025-11-17 18:48:25,129 - src.optimization.assignments - INFO - Assignments completed: 67 drivers assigned.
+2025-11-17 18:48:25,133 - EquiRidePipeline - INFO - SUCCESS Stage 5 Complete: Repositioning Plan saved to datasets/repositioning_plan.csv
+2025-11-17 18:48:25,133 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:48:25,133 - EquiRidePipeline - INFO - STAGE 6: SURGE ALERT DETECTION & NOTIFICATION
+2025-11-17 18:48:25,149 - EquiRidePipeline - INFO - SUCCESS Twilio client initialized successfully.
+2025-11-17 18:48:25,152 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] START    | 
+2025-11-17 18:48:25,154 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] SUCCESS  | alerts_found=0
+2025-11-17 18:48:25,154 - EquiRidePipeline - INFO - No forecast surge detected above threshold.
+2025-11-17 18:48:25,155 - EquiRidePipeline - INFO - SUCCESS Stage 6 Complete: 0 forecast-based alerts processed
+2025-11-17 18:48:25,155 - EquiRidePipeline - INFO - 
+================================================================================
+2025-11-17 18:48:25,156 - EquiRidePipeline - INFO -  PIPELINE COMPLETED SUCCESSFULLY
+2025-11-17 18:48:25,158 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:48:25,158 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Feature store connection closed
+2025-11-17 18:48:25,159 - EquiRidePipeline - INFO - End time: 2025-11-17 18:48:25
+2025-11-17 18:48:25,159 - EquiRidePipeline - INFO - 
+SUMMARY:
+2025-11-17 18:48:25,159 - EquiRidePipeline - INFO -    Records processed: 18000
+2025-11-17 18:48:25,160 - EquiRidePipeline - INFO -    Features generated: 126
+2025-11-17 18:48:25,160 - EquiRidePipeline - INFO -    Batch ID: batch_20251117_184814
+2025-11-17 18:48:25,161 - EquiRidePipeline - INFO -    Alerts processed: 0
+2025-11-17 18:48:25,161 - EquiRidePipeline - INFO -    Repositioning Plan created: 67 assignments
+2025-11-17 18:48:25,162 - EquiRidePipeline - INFO - 
+OUTPUT FILES:
+2025-11-17 18:48:25,163 - EquiRidePipeline - INFO -    Processed data: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv
+2025-11-17 18:48:25,163 - EquiRidePipeline - INFO -    Engineered features: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 18:48:25,164 - EquiRidePipeline - INFO -    Forecast predictions: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 18:48:25,165 - EquiRidePipeline - INFO -    Repositioning Plan: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/repositioning_plan.csv
+2025-11-17 18:48:25,165 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:52:56,612 - EquiRidePipeline - INFO - 
+2025-11-17 18:52:56,612 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:52:56,612 - EquiRidePipeline - INFO -           EQUI-RIDE SURGE AI - FULL PRODUCTION RUN          
+2025-11-17 18:52:56,613 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:52:56,613 - EquiRidePipeline - INFO - Pipeline started at: 2025-11-17 18:52:56
+2025-11-17 18:52:56,613 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:52:56,613 - EquiRidePipeline - INFO - 
+2025-11-17 18:52:56,615 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:52:56,615 - EquiRidePipeline - INFO - STAGE 1: DATA CLEANING & ALIGNMENT
+2025-11-17 18:52:56,615 - EquiRidePipeline - INFO - 
+========================================
+2025-11-17 18:52:56,615 - EquiRidePipeline - INFO - [DataCleaner] Starting full cleaning pipeline.
+2025-11-17 18:52:56,616 - EquiRidePipeline - INFO - ========================================
+2025-11-17 18:52:56,616 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] START    | file=C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/Data_set.csv
+2025-11-17 18:52:56,747 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] SUCCESS  | rows=18000, cols=41
+2025-11-17 18:52:56,748 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] START    | 
+2025-11-17 18:52:56,951 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] SUCCESS  | 
+2025-11-17 18:52:56,953 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] START    | 
+2025-11-17 18:52:56,989 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] SUCCESS  | removed=0
+2025-11-17 18:52:56,991 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] START    | 
+2025-11-17 18:52:57,013 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] SUCCESS  | 
+2025-11-17 18:52:57,015 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] START    | 
+2025-11-17 18:52:57,042 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] SUCCESS  | 
+2025-11-17 18:52:57,046 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] START    | 
+2025-11-17 18:52:57,090 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] SUCCESS  | filled=0
+2025-11-17 18:52:57,593 - EquiRidePipeline - INFO - [DataCleaner] SUCCESS: Cleaned data saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 records.
+2025-11-17 18:52:57,594 - EquiRidePipeline - INFO - SUCCESS Stage 1 Complete: 18000 records cleaned
+2025-11-17 18:52:57,594 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:52:57,595 - EquiRidePipeline - INFO - STAGE 2: FEATURE ENGINEERING
+2025-11-17 18:52:57,595 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:52:57,596 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - STARTED
+2025-11-17 18:52:57,596 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:52:57,783 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 rows.
+2025-11-17 18:52:57,783 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] START    | 
+2025-11-17 18:52:57,790 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] SUCCESS  | features=6
+2025-11-17 18:52:57,790 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] START    | 
+2025-11-17 18:52:57,825 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] SUCCESS  | features=4
+2025-11-17 18:52:57,837 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] START    | 
+2025-11-17 18:52:58,432 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] SUCCESS  | features=40
+2025-11-17 18:52:58,433 - EquiRidePipeline - INFO - [LAG_FEATURES        ] START    | 
+2025-11-17 18:52:58,458 - EquiRidePipeline - INFO - [LAG_FEATURES        ] SUCCESS  | features=16
+2025-11-17 18:52:58,459 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] START    | 
+2025-11-17 18:52:58,467 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] SUCCESS  | features=4
+2025-11-17 18:52:58,467 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] START    | 
+2025-11-17 18:52:58,550 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] SUCCESS  | features=4, anomalies_detected=762
+2025-11-17 18:52:58,551 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] START    | 
+2025-11-17 18:52:58,561 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] SUCCESS  | features=4
+2025-11-17 18:53:00,373 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:53:00,375 - EquiRidePipeline - INFO - SUCCESS Engineered features saved: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 18:53:00,375 - EquiRidePipeline - INFO - SUCCESS Shape: (18000, 126)
+2025-11-17 18:53:00,375 - EquiRidePipeline - INFO - SUCCESS New features created: 78
+2025-11-17 18:53:00,376 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - COMPLETED
+2025-11-17 18:53:00,376 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:53:00,377 - EquiRidePipeline - INFO - SUCCESS Stage 2 Complete: 126 features generated
+2025-11-17 18:53:00,377 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:53:00,378 - EquiRidePipeline - INFO - STAGE 3: FEATURE STORE MANAGEMENT
+2025-11-17 18:53:00,387 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Connected to feature store: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\data/feature_store/surge_features.db
+2025-11-17 18:53:00,387 - EquiRidePipeline - INFO - [CREATE_TABLES       ] START    | 
+2025-11-17 18:53:00,389 - EquiRidePipeline - INFO - [CREATE_TABLES       ] SUCCESS  | 
+2025-11-17 18:53:00,390 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] START    | batch=batch_20251117_185256
+2025-11-17 18:53:00,632 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] SUCCESS  | inserted=18000
+2025-11-17 18:53:00,639 - EquiRidePipeline - INFO - SUCCESS Stage 3 Complete: 18000 records inserted into feature store
+2025-11-17 18:53:00,640 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:53:00,640 - EquiRidePipeline - INFO - STAGE 4: MODEL INFERENCE (HYBRID ENSEMBLE)
+2025-11-17 18:53:00,640 - src.models.infer - INFO - Starting HYBRID ENSEMBLE inference (LGBM + GNN) using features from datasets/engineered_features.csv...
+2025-11-17 18:53:01,045 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 18:53:01,606 - src.models.infer - ERROR - LGBM Prediction failed (src/models/lgb_bookings_1step.pkl). Using zero array: Error loading LightGBM model: 'tuple' object has no attribute 'model_type' and no __dict__ for setting new attributes, STACK_GLOBAL requires str
+2025-11-17 18:53:01,667 - src.utils - ERROR - Error loading PyTorch PT model: Error(s) in loading state_dict for GraphWaveNet:
+	Missing key(s) in state_dict: "A_norm". 
+2025-11-17 18:53:01,668 - src.models.infer - ERROR - GNN Prediction failed (src/models/gwn_L12.pt). Using zero array: Error loading PyTorch PT model: Error(s) in loading state_dict for GraphWaveNet:
+	Missing key(s) in state_dict: "A_norm". 
+2025-11-17 18:53:01,672 - src.models.infer - INFO - Hybrid inference complete. Predictions saved for 3 zones to datasets/forecast_15min_predictions.csv
+2025-11-17 18:53:01,676 - EquiRidePipeline - INFO - SUCCESS Stage 4 Complete: Hybrid Forecast predictions ready at datasets/forecast_15min_predictions.csv
+2025-11-17 18:53:01,676 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:53:01,677 - EquiRidePipeline - INFO - STAGE 5: DRIVER REPOSITIONING OPTIMIZATION (PROFIT, FAIRNESS, ECO)
+2025-11-17 18:53:01,677 - src.optimization.assignments - INFO - Fetching inputs for Repositioning Plan generation...
+2025-11-17 18:53:01,681 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv with 3 rows.
+2025-11-17 18:53:01,682 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:53:01,682 - src.data.utils - INFO - Generated 67 deterministic available drivers.
+2025-11-17 18:53:01,682 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:53:01,683 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:53:02,048 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 18:53:02,052 - src.data.utils - INFO - Derived anomaly flags based on top 5 riskiest zones using bookings_lag_1.
+2025-11-17 18:53:02,056 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:53:02,056 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 18:53:02,057 - src.data.utils - INFO - Generated deterministic driver history for 100 drivers.
+2025-11-17 18:53:02,058 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:53:02,058 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 18:53:02,062 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:53:02,063 - src.data.utils - INFO - Generated deterministic driver-to-zone distance matrix shape: (100, 67)
+2025-11-17 18:53:02,064 - src.optimization.assignments - WARNING - Eco data shape mismatch: (100, 67) != (67, 67). Using default 10km distances.
+2025-11-17 18:53:02,084 - src.optimization.assignments - INFO - Assignments completed: 67 drivers assigned.
+2025-11-17 18:53:02,088 - EquiRidePipeline - INFO - SUCCESS Stage 5 Complete: Repositioning Plan saved to datasets/repositioning_plan.csv
+2025-11-17 18:53:02,088 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:53:02,088 - EquiRidePipeline - INFO - STAGE 6: SURGE ALERT DETECTION & NOTIFICATION
+2025-11-17 18:53:02,100 - EquiRidePipeline - INFO - SUCCESS Twilio client initialized successfully.
+2025-11-17 18:53:02,101 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] START    | 
+2025-11-17 18:53:02,102 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] SUCCESS  | alerts_found=0
+2025-11-17 18:53:02,103 - EquiRidePipeline - INFO - No forecast surge detected above threshold.
+2025-11-17 18:53:02,103 - EquiRidePipeline - INFO - SUCCESS Stage 6 Complete: 0 forecast-based alerts processed
+2025-11-17 18:53:02,103 - EquiRidePipeline - INFO - 
+================================================================================
+2025-11-17 18:53:02,103 - EquiRidePipeline - INFO -  PIPELINE COMPLETED SUCCESSFULLY
+2025-11-17 18:53:02,104 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:53:02,104 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Feature store connection closed
+2025-11-17 18:53:02,104 - EquiRidePipeline - INFO - End time: 2025-11-17 18:53:02
+2025-11-17 18:53:02,105 - EquiRidePipeline - INFO - 
+SUMMARY:
+2025-11-17 18:53:02,105 - EquiRidePipeline - INFO -    Records processed: 18000
+2025-11-17 18:53:02,105 - EquiRidePipeline - INFO -    Features generated: 126
+2025-11-17 18:53:02,106 - EquiRidePipeline - INFO -    Batch ID: batch_20251117_185256
+2025-11-17 18:53:02,106 - EquiRidePipeline - INFO -    Alerts processed: 0
+2025-11-17 18:53:02,107 - EquiRidePipeline - INFO -    Repositioning Plan created: 67 assignments
+2025-11-17 18:53:02,107 - EquiRidePipeline - INFO - 
+OUTPUT FILES:
+2025-11-17 18:53:02,108 - EquiRidePipeline - INFO -    Processed data: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv
+2025-11-17 18:53:02,108 - EquiRidePipeline - INFO -    Engineered features: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 18:53:02,108 - EquiRidePipeline - INFO -    Forecast predictions: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 18:53:02,108 - EquiRidePipeline - INFO -    Repositioning Plan: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/repositioning_plan.csv
+2025-11-17 18:53:02,108 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:55:48,786 - EquiRidePipeline - INFO - 
+2025-11-17 18:55:48,786 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:55:48,786 - EquiRidePipeline - INFO -           EQUI-RIDE SURGE AI - FULL PRODUCTION RUN          
+2025-11-17 18:55:48,786 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:55:48,787 - EquiRidePipeline - INFO - Pipeline started at: 2025-11-17 18:55:48
+2025-11-17 18:55:48,787 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:55:48,787 - EquiRidePipeline - INFO - 
+2025-11-17 18:55:48,789 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:55:48,789 - EquiRidePipeline - INFO - STAGE 1: DATA CLEANING & ALIGNMENT
+2025-11-17 18:55:48,789 - EquiRidePipeline - INFO - 
+========================================
+2025-11-17 18:55:48,790 - EquiRidePipeline - INFO - [DataCleaner] Starting full cleaning pipeline.
+2025-11-17 18:55:48,790 - EquiRidePipeline - INFO - ========================================
+2025-11-17 18:55:48,790 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] START    | file=C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/Data_set.csv
+2025-11-17 18:55:48,925 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] SUCCESS  | rows=18000, cols=41
+2025-11-17 18:55:48,926 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] START    | 
+2025-11-17 18:55:49,116 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] SUCCESS  | 
+2025-11-17 18:55:49,119 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] START    | 
+2025-11-17 18:55:49,168 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] SUCCESS  | removed=0
+2025-11-17 18:55:49,170 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] START    | 
+2025-11-17 18:55:49,191 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] SUCCESS  | 
+2025-11-17 18:55:49,192 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] START    | 
+2025-11-17 18:55:49,211 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] SUCCESS  | 
+2025-11-17 18:55:49,212 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] START    | 
+2025-11-17 18:55:49,252 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] SUCCESS  | filled=0
+2025-11-17 18:55:49,790 - EquiRidePipeline - INFO - [DataCleaner] SUCCESS: Cleaned data saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 records.
+2025-11-17 18:55:49,791 - EquiRidePipeline - INFO - SUCCESS Stage 1 Complete: 18000 records cleaned
+2025-11-17 18:55:49,792 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:55:49,792 - EquiRidePipeline - INFO - STAGE 2: FEATURE ENGINEERING
+2025-11-17 18:55:49,793 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:55:49,793 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - STARTED
+2025-11-17 18:55:49,795 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:55:49,975 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 rows.
+2025-11-17 18:55:49,976 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] START    | 
+2025-11-17 18:55:49,981 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] SUCCESS  | features=6
+2025-11-17 18:55:49,982 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] START    | 
+2025-11-17 18:55:50,010 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] SUCCESS  | features=4
+2025-11-17 18:55:50,011 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] START    | 
+2025-11-17 18:55:50,595 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] SUCCESS  | features=40
+2025-11-17 18:55:50,595 - EquiRidePipeline - INFO - [LAG_FEATURES        ] START    | 
+2025-11-17 18:55:50,619 - EquiRidePipeline - INFO - [LAG_FEATURES        ] SUCCESS  | features=16
+2025-11-17 18:55:50,620 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] START    | 
+2025-11-17 18:55:50,625 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] SUCCESS  | features=4
+2025-11-17 18:55:50,626 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] START    | 
+2025-11-17 18:55:50,703 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] SUCCESS  | features=4, anomalies_detected=762
+2025-11-17 18:55:50,704 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] START    | 
+2025-11-17 18:55:50,710 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] SUCCESS  | features=4
+2025-11-17 18:55:52,742 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:55:52,743 - EquiRidePipeline - INFO - SUCCESS Engineered features saved: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 18:55:52,743 - EquiRidePipeline - INFO - SUCCESS Shape: (18000, 126)
+2025-11-17 18:55:52,743 - EquiRidePipeline - INFO - SUCCESS New features created: 78
+2025-11-17 18:55:52,744 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - COMPLETED
+2025-11-17 18:55:52,744 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:55:52,745 - EquiRidePipeline - INFO - SUCCESS Stage 2 Complete: 126 features generated
+2025-11-17 18:55:52,745 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:55:52,746 - EquiRidePipeline - INFO - STAGE 3: FEATURE STORE MANAGEMENT
+2025-11-17 18:55:52,754 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Connected to feature store: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\data/feature_store/surge_features.db
+2025-11-17 18:55:52,755 - EquiRidePipeline - INFO - [CREATE_TABLES       ] START    | 
+2025-11-17 18:55:52,758 - EquiRidePipeline - INFO - [CREATE_TABLES       ] SUCCESS  | 
+2025-11-17 18:55:52,759 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] START    | batch=batch_20251117_185548
+2025-11-17 18:55:52,939 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] SUCCESS  | inserted=18000
+2025-11-17 18:55:52,942 - EquiRidePipeline - INFO - SUCCESS Stage 3 Complete: 18000 records inserted into feature store
+2025-11-17 18:55:52,942 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:55:52,943 - EquiRidePipeline - INFO - STAGE 4: MODEL INFERENCE (HYBRID ENSEMBLE)
+2025-11-17 18:55:52,944 - src.models.infer - INFO - Starting HYBRID ENSEMBLE inference (LGBM + GNN) using features from datasets/engineered_features.csv...
+2025-11-17 18:55:53,317 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 18:55:54,019 - src.utils - INFO - Loaded LGBM model via joblib from src/models/lgb_bookings_1step.pkl
+2025-11-17 18:55:54,019 - src.utils - INFO - Loaded object is a tuple, extracting first element as model.
+2025-11-17 18:55:56,734 - src.utils - ERROR - LGBM prediction execution failed: pandas dtypes must be int, float or bool.
+Fields with bad pandas dtypes: time: object, area_name: object, road/intersection_name: object, weather_conditions: object, event_name: object, event_type: object, time_bucket: object, capacity_category: object, hour_category: object
+2025-11-17 18:55:56,769 - src.utils - INFO - Successfully loaded GraphWaveNet model from src/models/gwn_L12.pt.
+2025-11-17 18:55:56,770 - src.utils - WARNING - Unknown model type 'unknown'. Returning zero predictions.
+2025-11-17 18:55:56,775 - src.models.infer - INFO - Hybrid inference complete. Predictions saved for 3 zones to datasets/forecast_15min_predictions.csv
+2025-11-17 18:55:56,778 - EquiRidePipeline - INFO - SUCCESS Stage 4 Complete: Hybrid Forecast predictions ready at datasets/forecast_15min_predictions.csv
+2025-11-17 18:55:56,778 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:55:56,779 - EquiRidePipeline - INFO - STAGE 5: DRIVER REPOSITIONING OPTIMIZATION (PROFIT, FAIRNESS, ECO)
+2025-11-17 18:55:56,779 - src.optimization.assignments - INFO - Fetching inputs for Repositioning Plan generation...
+2025-11-17 18:55:56,785 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv with 3 rows.
+2025-11-17 18:55:56,787 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:55:56,788 - src.data.utils - INFO - Generated 67 deterministic available drivers.
+2025-11-17 18:55:56,789 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:55:56,790 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:55:57,149 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 18:55:57,153 - src.data.utils - INFO - Derived anomaly flags based on top 5 riskiest zones using bookings_lag_1.
+2025-11-17 18:55:57,156 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:55:57,157 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 18:55:57,158 - src.data.utils - INFO - Generated deterministic driver history for 100 drivers.
+2025-11-17 18:55:57,160 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:55:57,161 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 18:55:57,162 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:55:57,163 - src.data.utils - INFO - Generated deterministic driver-to-zone distance matrix shape: (100, 67)
+2025-11-17 18:55:57,165 - src.optimization.assignments - WARNING - Eco data shape mismatch: (100, 67) != (67, 67). Using default 10km distances.
+2025-11-17 18:55:57,184 - src.optimization.assignments - INFO - Assignments completed: 67 drivers assigned.
+2025-11-17 18:55:57,188 - EquiRidePipeline - INFO - SUCCESS Stage 5 Complete: Repositioning Plan saved to datasets/repositioning_plan.csv
+2025-11-17 18:55:57,188 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:55:57,189 - EquiRidePipeline - INFO - STAGE 6: SURGE ALERT DETECTION & NOTIFICATION
+2025-11-17 18:55:57,197 - EquiRidePipeline - INFO - SUCCESS Twilio client initialized successfully.
+2025-11-17 18:55:57,201 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] START    | 
+2025-11-17 18:55:57,202 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] SUCCESS  | alerts_found=0
+2025-11-17 18:55:57,202 - EquiRidePipeline - INFO - No forecast surge detected above threshold.
+2025-11-17 18:55:57,203 - EquiRidePipeline - INFO - SUCCESS Stage 6 Complete: 0 forecast-based alerts processed
+2025-11-17 18:55:57,203 - EquiRidePipeline - INFO - 
+================================================================================
+2025-11-17 18:55:57,204 - EquiRidePipeline - INFO -  PIPELINE COMPLETED SUCCESSFULLY
+2025-11-17 18:55:57,204 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:55:57,205 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Feature store connection closed
+2025-11-17 18:55:57,205 - EquiRidePipeline - INFO - End time: 2025-11-17 18:55:57
+2025-11-17 18:55:57,205 - EquiRidePipeline - INFO - 
+SUMMARY:
+2025-11-17 18:55:57,206 - EquiRidePipeline - INFO -    Records processed: 18000
+2025-11-17 18:55:57,206 - EquiRidePipeline - INFO -    Features generated: 126
+2025-11-17 18:55:57,206 - EquiRidePipeline - INFO -    Batch ID: batch_20251117_185548
+2025-11-17 18:55:57,206 - EquiRidePipeline - INFO -    Alerts processed: 0
+2025-11-17 18:55:57,206 - EquiRidePipeline - INFO -    Repositioning Plan created: 67 assignments
+2025-11-17 18:55:57,206 - EquiRidePipeline - INFO - 
+OUTPUT FILES:
+2025-11-17 18:55:57,206 - EquiRidePipeline - INFO -    Processed data: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv
+2025-11-17 18:55:57,207 - EquiRidePipeline - INFO -    Engineered features: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 18:55:57,207 - EquiRidePipeline - INFO -    Forecast predictions: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 18:55:57,207 - EquiRidePipeline - INFO -    Repositioning Plan: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/repositioning_plan.csv
+2025-11-17 18:55:57,207 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:58:25,890 - EquiRidePipeline - INFO - 
+2025-11-17 18:58:25,891 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:58:25,891 - EquiRidePipeline - INFO -           EQUI-RIDE SURGE AI - FULL PRODUCTION RUN          
+2025-11-17 18:58:25,891 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:58:25,891 - EquiRidePipeline - INFO - Pipeline started at: 2025-11-17 18:58:25
+2025-11-17 18:58:25,892 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:58:25,892 - EquiRidePipeline - INFO - 
+2025-11-17 18:58:25,893 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:58:25,894 - EquiRidePipeline - INFO - STAGE 1: DATA CLEANING & ALIGNMENT
+2025-11-17 18:58:25,894 - EquiRidePipeline - INFO - 
+========================================
+2025-11-17 18:58:25,894 - EquiRidePipeline - INFO - [DataCleaner] Starting full cleaning pipeline.
+2025-11-17 18:58:25,894 - EquiRidePipeline - INFO - ========================================
+2025-11-17 18:58:25,894 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] START    | file=C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/Data_set.csv
+2025-11-17 18:58:26,012 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] SUCCESS  | rows=18000, cols=41
+2025-11-17 18:58:26,012 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] START    | 
+2025-11-17 18:58:26,211 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] SUCCESS  | 
+2025-11-17 18:58:26,212 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] START    | 
+2025-11-17 18:58:26,252 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] SUCCESS  | removed=0
+2025-11-17 18:58:26,256 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] START    | 
+2025-11-17 18:58:26,279 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] SUCCESS  | 
+2025-11-17 18:58:26,280 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] START    | 
+2025-11-17 18:58:26,297 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] SUCCESS  | 
+2025-11-17 18:58:26,299 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] START    | 
+2025-11-17 18:58:26,343 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] SUCCESS  | filled=0
+2025-11-17 18:58:26,826 - EquiRidePipeline - INFO - [DataCleaner] SUCCESS: Cleaned data saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 records.
+2025-11-17 18:58:26,827 - EquiRidePipeline - INFO - SUCCESS Stage 1 Complete: 18000 records cleaned
+2025-11-17 18:58:26,827 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:58:26,827 - EquiRidePipeline - INFO - STAGE 2: FEATURE ENGINEERING
+2025-11-17 18:58:26,828 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:58:26,828 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - STARTED
+2025-11-17 18:58:26,828 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:58:26,986 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 rows.
+2025-11-17 18:58:26,987 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] START    | 
+2025-11-17 18:58:26,993 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] SUCCESS  | features=6
+2025-11-17 18:58:26,994 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] START    | 
+2025-11-17 18:58:27,031 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] SUCCESS  | features=4
+2025-11-17 18:58:27,032 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] START    | 
+2025-11-17 18:58:27,604 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] SUCCESS  | features=40
+2025-11-17 18:58:27,604 - EquiRidePipeline - INFO - [LAG_FEATURES        ] START    | 
+2025-11-17 18:58:27,626 - EquiRidePipeline - INFO - [LAG_FEATURES        ] SUCCESS  | features=16
+2025-11-17 18:58:27,627 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] START    | 
+2025-11-17 18:58:27,639 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] SUCCESS  | features=4
+2025-11-17 18:58:27,640 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] START    | 
+2025-11-17 18:58:27,724 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] SUCCESS  | features=4, anomalies_detected=762
+2025-11-17 18:58:27,752 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] START    | 
+2025-11-17 18:58:27,762 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] SUCCESS  | features=4
+2025-11-17 18:58:29,531 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:58:29,532 - EquiRidePipeline - INFO - SUCCESS Engineered features saved: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 18:58:29,532 - EquiRidePipeline - INFO - SUCCESS Shape: (18000, 126)
+2025-11-17 18:58:29,533 - EquiRidePipeline - INFO - SUCCESS New features created: 78
+2025-11-17 18:58:29,533 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - COMPLETED
+2025-11-17 18:58:29,533 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 18:58:29,534 - EquiRidePipeline - INFO - SUCCESS Stage 2 Complete: 126 features generated
+2025-11-17 18:58:29,534 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:58:29,535 - EquiRidePipeline - INFO - STAGE 3: FEATURE STORE MANAGEMENT
+2025-11-17 18:58:29,542 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Connected to feature store: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\data/feature_store/surge_features.db
+2025-11-17 18:58:29,542 - EquiRidePipeline - INFO - [CREATE_TABLES       ] START    | 
+2025-11-17 18:58:29,543 - EquiRidePipeline - INFO - [CREATE_TABLES       ] SUCCESS  | 
+2025-11-17 18:58:29,544 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] START    | batch=batch_20251117_185825
+2025-11-17 18:58:29,716 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] SUCCESS  | inserted=18000
+2025-11-17 18:58:29,721 - EquiRidePipeline - INFO - SUCCESS Stage 3 Complete: 18000 records inserted into feature store
+2025-11-17 18:58:29,721 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:58:29,722 - EquiRidePipeline - INFO - STAGE 4: MODEL INFERENCE (HYBRID ENSEMBLE)
+2025-11-17 18:58:29,722 - src.models.infer - INFO - Starting HYBRID ENSEMBLE inference (LGBM + GNN) using features from datasets/engineered_features.csv...
+2025-11-17 18:58:30,091 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 18:58:30,630 - src.utils - INFO - Loaded LGBM model via joblib from src/models/lgb_bookings_1step.pkl
+2025-11-17 18:58:30,631 - src.utils - INFO - Loaded object is a tuple, extracting first element as model.
+2025-11-17 18:58:32,284 - src.utils - ERROR - LGBM prediction execution failed: The number of features in data (114) is not the same as it was in training data (15).
+You can set ``predict_disable_shape_check=true`` to discard this error, but please be aware what you are doing.
+2025-11-17 18:58:32,318 - src.utils - INFO - Successfully loaded GraphWaveNet model from src/models/gwn_L12.pt.
+2025-11-17 18:58:32,320 - src.utils - INFO - Loaded zone list with 67 zones.
+2025-11-17 18:58:32,331 - src.models.infer - ERROR - GNN Prediction failed (src/models/gwn_L12.pt). Using zero array: Given groups=1, weight of size [64, 10, 3], expected input[67, 114, 4] to have 10 channels, but got 114 channels instead
+2025-11-17 18:58:32,339 - src.models.infer - INFO - Hybrid inference complete. Predictions saved for 3 zones to datasets/forecast_15min_predictions.csv
+2025-11-17 18:58:32,344 - EquiRidePipeline - INFO - SUCCESS Stage 4 Complete: Hybrid Forecast predictions ready at datasets/forecast_15min_predictions.csv
+2025-11-17 18:58:32,345 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:58:32,346 - EquiRidePipeline - INFO - STAGE 5: DRIVER REPOSITIONING OPTIMIZATION (PROFIT, FAIRNESS, ECO)
+2025-11-17 18:58:32,346 - src.optimization.assignments - INFO - Fetching inputs for Repositioning Plan generation...
+2025-11-17 18:58:32,353 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv with 3 rows.
+2025-11-17 18:58:32,354 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:58:32,354 - src.data.utils - INFO - Generated 67 deterministic available drivers.
+2025-11-17 18:58:32,355 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:58:32,356 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:58:32,708 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 18:58:32,712 - src.data.utils - INFO - Derived anomaly flags based on top 5 riskiest zones using bookings_lag_1.
+2025-11-17 18:58:32,715 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:58:32,716 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 18:58:32,716 - src.data.utils - INFO - Generated deterministic driver history for 100 drivers.
+2025-11-17 18:58:32,718 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:58:32,719 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 18:58:32,720 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 18:58:32,722 - src.data.utils - INFO - Generated deterministic driver-to-zone distance matrix shape: (100, 67)
+2025-11-17 18:58:32,724 - src.optimization.assignments - WARNING - Eco data shape mismatch: (100, 67) != (67, 67). Using default 10km distances.
+2025-11-17 18:58:32,743 - src.optimization.assignments - INFO - Assignments completed: 67 drivers assigned.
+2025-11-17 18:58:32,748 - EquiRidePipeline - INFO - SUCCESS Stage 5 Complete: Repositioning Plan saved to datasets/repositioning_plan.csv
+2025-11-17 18:58:32,748 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 18:58:32,748 - EquiRidePipeline - INFO - STAGE 6: SURGE ALERT DETECTION & NOTIFICATION
+2025-11-17 18:58:32,762 - EquiRidePipeline - INFO - SUCCESS Twilio client initialized successfully.
+2025-11-17 18:58:32,764 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] START    | 
+2025-11-17 18:58:32,765 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] SUCCESS  | alerts_found=0
+2025-11-17 18:58:32,766 - EquiRidePipeline - INFO - No forecast surge detected above threshold.
+2025-11-17 18:58:32,766 - EquiRidePipeline - INFO - SUCCESS Stage 6 Complete: 0 forecast-based alerts processed
+2025-11-17 18:58:32,766 - EquiRidePipeline - INFO - 
+================================================================================
+2025-11-17 18:58:32,767 - EquiRidePipeline - INFO -  PIPELINE COMPLETED SUCCESSFULLY
+2025-11-17 18:58:32,768 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 18:58:32,768 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Feature store connection closed
+2025-11-17 18:58:32,769 - EquiRidePipeline - INFO - End time: 2025-11-17 18:58:32
+2025-11-17 18:58:32,770 - EquiRidePipeline - INFO - 
+SUMMARY:
+2025-11-17 18:58:32,770 - EquiRidePipeline - INFO -    Records processed: 18000
+2025-11-17 18:58:32,770 - EquiRidePipeline - INFO -    Features generated: 126
+2025-11-17 18:58:32,771 - EquiRidePipeline - INFO -    Batch ID: batch_20251117_185825
+2025-11-17 18:58:32,771 - EquiRidePipeline - INFO -    Alerts processed: 0
+2025-11-17 18:58:32,771 - EquiRidePipeline - INFO -    Repositioning Plan created: 67 assignments
+2025-11-17 18:58:32,772 - EquiRidePipeline - INFO - 
+OUTPUT FILES:
+2025-11-17 18:58:32,772 - EquiRidePipeline - INFO -    Processed data: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv
+2025-11-17 18:58:32,772 - EquiRidePipeline - INFO -    Engineered features: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 18:58:32,772 - EquiRidePipeline - INFO -    Forecast predictions: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 18:58:32,773 - EquiRidePipeline - INFO -    Repositioning Plan: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/repositioning_plan.csv
+2025-11-17 18:58:32,773 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:10:52,219 - EquiRidePipeline - INFO - 
+2025-11-17 19:10:52,221 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:10:52,221 - EquiRidePipeline - INFO -           EQUI-RIDE SURGE AI - FULL PRODUCTION RUN          
+2025-11-17 19:10:52,222 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:10:52,222 - EquiRidePipeline - INFO - Pipeline started at: 2025-11-17 19:10:52
+2025-11-17 19:10:52,222 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:10:52,223 - EquiRidePipeline - INFO - 
+2025-11-17 19:10:52,226 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:10:52,226 - EquiRidePipeline - INFO - STAGE 1: DATA CLEANING & ALIGNMENT
+2025-11-17 19:10:52,227 - EquiRidePipeline - INFO - 
+========================================
+2025-11-17 19:10:52,227 - EquiRidePipeline - INFO - [DataCleaner] Starting full cleaning pipeline.
+2025-11-17 19:10:52,227 - EquiRidePipeline - INFO - ========================================
+2025-11-17 19:10:52,227 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] START    | file=C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/Data_set.csv
+2025-11-17 19:10:52,495 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] SUCCESS  | rows=18000, cols=41
+2025-11-17 19:10:52,496 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] START    | 
+2025-11-17 19:10:53,004 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] SUCCESS  | 
+2025-11-17 19:10:53,006 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] START    | 
+2025-11-17 19:10:53,079 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] SUCCESS  | removed=0
+2025-11-17 19:10:53,083 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] START    | 
+2025-11-17 19:10:53,133 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] SUCCESS  | 
+2025-11-17 19:10:53,135 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] START    | 
+2025-11-17 19:10:53,171 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] SUCCESS  | 
+2025-11-17 19:10:53,174 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] START    | 
+2025-11-17 19:10:53,265 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] SUCCESS  | filled=0
+2025-11-17 19:10:54,456 - EquiRidePipeline - INFO - [DataCleaner] SUCCESS: Cleaned data saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 records.
+2025-11-17 19:10:54,457 - EquiRidePipeline - INFO - SUCCESS Stage 1 Complete: 18000 records cleaned
+2025-11-17 19:10:54,457 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:10:54,457 - EquiRidePipeline - INFO - STAGE 2: FEATURE ENGINEERING
+2025-11-17 19:10:54,458 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 19:10:54,459 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - STARTED
+2025-11-17 19:10:54,459 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 19:10:54,761 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 rows.
+2025-11-17 19:10:54,762 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] START    | 
+2025-11-17 19:10:54,776 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] SUCCESS  | features=6
+2025-11-17 19:10:54,777 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] START    | 
+2025-11-17 19:10:54,850 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] SUCCESS  | features=4
+2025-11-17 19:10:54,851 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] START    | 
+2025-11-17 19:10:56,451 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] SUCCESS  | features=40
+2025-11-17 19:10:56,453 - EquiRidePipeline - INFO - [LAG_FEATURES        ] START    | 
+2025-11-17 19:10:56,521 - EquiRidePipeline - INFO - [LAG_FEATURES        ] SUCCESS  | features=16
+2025-11-17 19:10:56,522 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] START    | 
+2025-11-17 19:10:56,538 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] SUCCESS  | features=4
+2025-11-17 19:10:56,539 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] START    | 
+2025-11-17 19:10:56,713 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] SUCCESS  | features=4, anomalies_detected=762
+2025-11-17 19:10:56,714 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] START    | 
+2025-11-17 19:10:56,730 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] SUCCESS  | features=4
+2025-11-17 19:10:59,981 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 19:10:59,982 - EquiRidePipeline - INFO - SUCCESS Engineered features saved: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 19:10:59,983 - EquiRidePipeline - INFO - SUCCESS Shape: (18000, 126)
+2025-11-17 19:10:59,983 - EquiRidePipeline - INFO - SUCCESS New features created: 78
+2025-11-17 19:10:59,984 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - COMPLETED
+2025-11-17 19:10:59,985 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 19:10:59,985 - EquiRidePipeline - INFO - SUCCESS Stage 2 Complete: 126 features generated
+2025-11-17 19:10:59,986 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:10:59,986 - EquiRidePipeline - INFO - STAGE 3: FEATURE STORE MANAGEMENT
+2025-11-17 19:10:59,990 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Connected to feature store: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\data/feature_store/surge_features.db
+2025-11-17 19:10:59,990 - EquiRidePipeline - INFO - [CREATE_TABLES       ] START    | 
+2025-11-17 19:10:59,993 - EquiRidePipeline - INFO - [CREATE_TABLES       ] SUCCESS  | 
+2025-11-17 19:10:59,994 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] START    | batch=batch_20251117_191052
+2025-11-17 19:11:00,365 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] SUCCESS  | inserted=18000
+2025-11-17 19:11:00,373 - EquiRidePipeline - INFO - SUCCESS Stage 3 Complete: 18000 records inserted into feature store
+2025-11-17 19:11:00,374 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:11:00,374 - EquiRidePipeline - INFO - STAGE 4: MODEL INFERENCE (HYBRID ENSEMBLE)
+2025-11-17 19:11:00,375 - src.models.infer - INFO - Starting HYBRID ENSEMBLE inference (LGBM + GNN) using features from datasets/engineered_features.csv...
+2025-11-17 19:11:01,132 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 19:11:01,139 - src.models.infer - INFO - Inference timestamp: 2025-12-18 00:00:00, Zones: 3
+2025-11-17 19:11:02,166 - src.utils - INFO - Loaded LGBM model via joblib from src/models/lgb_bookings_1step.pkl
+2025-11-17 19:11:02,167 - src.utils - INFO - Loaded object is a tuple, extracting first element as model.
+2025-11-17 19:11:02,167 - src.models.infer - WARNING - LGBM missing features: ['bookings_lag_2', 'bookings_lag_4']. Filling with 0.
+2025-11-17 19:11:04,485 - src.utils - INFO - Successfully loaded GraphWaveNet model from src/models/gwn_L12.pt.
+2025-11-17 19:11:04,489 - src.utils - INFO - Loaded zone list with 67 zones.
+2025-11-17 19:11:04,559 - src.models.infer - WARNING - Prediction length mismatch: LGBM=3, GNN=67. Truncating.
+2025-11-17 19:11:04,568 - src.models.infer - INFO - Hybrid inference complete. Predictions saved for 3 zones to datasets/forecast_15min_predictions.csv
+2025-11-17 19:11:04,572 - EquiRidePipeline - INFO - SUCCESS Stage 4 Complete: Hybrid Forecast predictions ready at datasets/forecast_15min_predictions.csv
+2025-11-17 19:11:04,573 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:11:04,573 - EquiRidePipeline - INFO - STAGE 5: DRIVER REPOSITIONING OPTIMIZATION (PROFIT, FAIRNESS, ECO)
+2025-11-17 19:11:04,574 - src.optimization.assignments - INFO - Fetching inputs for Repositioning Plan generation...
+2025-11-17 19:11:04,605 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv with 3 rows.
+2025-11-17 19:11:04,606 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:11:04,607 - src.data.utils - INFO - Generated 67 deterministic available drivers.
+2025-11-17 19:11:04,608 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:11:04,609 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:11:05,276 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 19:11:05,287 - src.data.utils - INFO - Derived anomaly flags based on top 5 riskiest zones using bookings_lag_1.
+2025-11-17 19:11:05,301 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:11:05,302 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 19:11:05,303 - src.data.utils - INFO - Generated deterministic driver history for 100 drivers.
+2025-11-17 19:11:05,305 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:11:05,306 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 19:11:05,307 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:11:05,310 - src.data.utils - INFO - Generated deterministic driver-to-zone distance matrix shape: (100, 67)
+2025-11-17 19:11:05,313 - src.optimization.assignments - WARNING - Eco data shape mismatch: (100, 67) != (67, 67). Using default 10km distances.
+2025-11-17 19:11:05,342 - src.optimization.assignments - INFO - Assignments completed: 67 drivers assigned.
+2025-11-17 19:11:05,347 - EquiRidePipeline - INFO - SUCCESS Stage 5 Complete: Repositioning Plan saved to datasets/repositioning_plan.csv
+2025-11-17 19:11:05,347 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:11:05,348 - EquiRidePipeline - INFO - STAGE 6: SURGE ALERT DETECTION & NOTIFICATION
+2025-11-17 19:11:05,370 - EquiRidePipeline - INFO - SUCCESS Twilio client initialized successfully.
+2025-11-17 19:11:05,374 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] START    | 
+2025-11-17 19:11:05,376 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] SUCCESS  | alerts_found=0
+2025-11-17 19:11:05,377 - EquiRidePipeline - INFO - No forecast surge detected above threshold.
+2025-11-17 19:11:05,378 - EquiRidePipeline - INFO - SUCCESS Stage 6 Complete: 0 forecast-based alerts processed
+2025-11-17 19:11:05,378 - EquiRidePipeline - INFO - 
+================================================================================
+2025-11-17 19:11:05,379 - EquiRidePipeline - INFO -  PIPELINE COMPLETED SUCCESSFULLY
+2025-11-17 19:11:05,379 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:11:05,381 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Feature store connection closed
+2025-11-17 19:11:05,381 - EquiRidePipeline - INFO - End time: 2025-11-17 19:11:05
+2025-11-17 19:11:05,382 - EquiRidePipeline - INFO - 
+SUMMARY:
+2025-11-17 19:11:05,383 - EquiRidePipeline - INFO -    Records processed: 18000
+2025-11-17 19:11:05,383 - EquiRidePipeline - INFO -    Features generated: 126
+2025-11-17 19:11:05,384 - EquiRidePipeline - INFO -    Batch ID: batch_20251117_191052
+2025-11-17 19:11:05,384 - EquiRidePipeline - INFO -    Alerts processed: 0
+2025-11-17 19:11:05,385 - EquiRidePipeline - INFO -    Repositioning Plan created: 67 assignments
+2025-11-17 19:11:05,385 - EquiRidePipeline - INFO - 
+OUTPUT FILES:
+2025-11-17 19:11:05,386 - EquiRidePipeline - INFO -    Processed data: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv
+2025-11-17 19:11:05,386 - EquiRidePipeline - INFO -    Engineered features: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 19:11:05,386 - EquiRidePipeline - INFO -    Forecast predictions: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 19:11:05,387 - EquiRidePipeline - INFO -    Repositioning Plan: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/repositioning_plan.csv
+2025-11-17 19:11:05,387 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:15:55,469 - EquiRidePipeline - INFO - 
+2025-11-17 19:15:55,474 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:15:55,475 - EquiRidePipeline - INFO -           EQUI-RIDE SURGE AI - FULL PRODUCTION RUN          
+2025-11-17 19:15:55,475 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:15:55,475 - EquiRidePipeline - INFO - Pipeline started at: 2025-11-17 19:15:55
+2025-11-17 19:15:55,475 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:15:55,476 - EquiRidePipeline - INFO - 
+2025-11-17 19:15:55,479 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:15:55,480 - EquiRidePipeline - INFO - STAGE 1: DATA CLEANING & ALIGNMENT
+2025-11-17 19:15:55,480 - EquiRidePipeline - INFO - 
+========================================
+2025-11-17 19:15:55,480 - EquiRidePipeline - INFO - [DataCleaner] Starting full cleaning pipeline.
+2025-11-17 19:15:55,481 - EquiRidePipeline - INFO - ========================================
+2025-11-17 19:15:55,481 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] START    | file=C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/Data_set.csv
+2025-11-17 19:15:55,649 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] SUCCESS  | rows=18000, cols=41
+2025-11-17 19:15:55,649 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] START    | 
+2025-11-17 19:15:55,945 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] SUCCESS  | 
+2025-11-17 19:15:55,948 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] START    | 
+2025-11-17 19:15:56,036 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] SUCCESS  | removed=0
+2025-11-17 19:15:56,039 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] START    | 
+2025-11-17 19:15:56,091 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] SUCCESS  | 
+2025-11-17 19:15:56,094 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] START    | 
+2025-11-17 19:15:56,131 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] SUCCESS  | 
+2025-11-17 19:15:56,135 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] START    | 
+2025-11-17 19:15:56,232 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] SUCCESS  | filled=0
+2025-11-17 19:15:57,061 - EquiRidePipeline - INFO - [DataCleaner] SUCCESS: Cleaned data saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 records.
+2025-11-17 19:15:57,061 - EquiRidePipeline - INFO - SUCCESS Stage 1 Complete: 18000 records cleaned
+2025-11-17 19:15:57,061 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:15:57,061 - EquiRidePipeline - INFO - STAGE 2: FEATURE ENGINEERING
+2025-11-17 19:15:57,062 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 19:15:57,062 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - STARTED
+2025-11-17 19:15:57,062 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 19:15:57,265 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 rows.
+2025-11-17 19:15:57,265 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] START    | 
+2025-11-17 19:15:57,275 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] SUCCESS  | features=6
+2025-11-17 19:15:57,276 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] START    | 
+2025-11-17 19:15:57,304 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] SUCCESS  | features=4
+2025-11-17 19:15:57,304 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] START    | 
+2025-11-17 19:15:57,915 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] SUCCESS  | features=40
+2025-11-17 19:15:57,916 - EquiRidePipeline - INFO - [LAG_FEATURES        ] START    | 
+2025-11-17 19:15:57,941 - EquiRidePipeline - INFO - [LAG_FEATURES        ] SUCCESS  | features=16
+2025-11-17 19:15:57,942 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] START    | 
+2025-11-17 19:15:57,950 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] SUCCESS  | features=4
+2025-11-17 19:15:57,950 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] START    | 
+2025-11-17 19:15:58,029 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] SUCCESS  | features=4, anomalies_detected=762
+2025-11-17 19:15:58,049 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] START    | 
+2025-11-17 19:15:58,058 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] SUCCESS  | features=4
+2025-11-17 19:16:00,052 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 19:16:00,053 - EquiRidePipeline - INFO - SUCCESS Engineered features saved: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 19:16:00,053 - EquiRidePipeline - INFO - SUCCESS Shape: (18000, 126)
+2025-11-17 19:16:00,054 - EquiRidePipeline - INFO - SUCCESS New features created: 78
+2025-11-17 19:16:00,054 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - COMPLETED
+2025-11-17 19:16:00,054 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 19:16:00,055 - EquiRidePipeline - INFO - SUCCESS Stage 2 Complete: 126 features generated
+2025-11-17 19:16:00,055 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:16:00,056 - EquiRidePipeline - INFO - STAGE 3: FEATURE STORE MANAGEMENT
+2025-11-17 19:16:00,060 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Connected to feature store: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\data/feature_store/surge_features.db
+2025-11-17 19:16:00,061 - EquiRidePipeline - INFO - [CREATE_TABLES       ] START    | 
+2025-11-17 19:16:00,062 - EquiRidePipeline - INFO - [CREATE_TABLES       ] SUCCESS  | 
+2025-11-17 19:16:00,062 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] START    | batch=batch_20251117_191555
+2025-11-17 19:16:00,230 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] SUCCESS  | inserted=18000
+2025-11-17 19:16:00,234 - EquiRidePipeline - INFO - SUCCESS Stage 3 Complete: 18000 records inserted into feature store
+2025-11-17 19:16:00,235 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:16:00,235 - EquiRidePipeline - INFO - STAGE 4: MODEL INFERENCE (HYBRID ENSEMBLE)
+2025-11-17 19:16:00,236 - src.models.infer - INFO - Starting HYBRID ENSEMBLE inference using features from datasets/engineered_features.csv...
+2025-11-17 19:16:00,630 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 19:16:00,634 - src.models.infer - INFO - Inference timestamp: 2025-12-18 00:00:00, Zones: 3
+2025-11-17 19:16:01,196 - src.utils - INFO - Loaded LGBM model via joblib from src/models/lgb_bookings_1step.pkl
+2025-11-17 19:16:01,197 - src.utils - INFO - Loaded object is a tuple, extracting first element as model.
+2025-11-17 19:16:01,197 - src.models.infer - WARNING - LGBM missing cols: ['bookings_lag_2', 'bookings_lag_4'], filling 0
+2025-11-17 19:16:03,228 - src.models.infer - INFO - LightGBM inference successful.
+2025-11-17 19:16:03,260 - src.utils - INFO - Successfully loaded GraphWaveNet model from src/models/gwn_L12.pt.
+2025-11-17 19:16:03,263 - src.utils - INFO - Loaded zone list with 67 zones.
+2025-11-17 19:16:03,301 - src.models.infer - INFO - GNN inference successful.
+2025-11-17 19:16:03,306 - src.models.infer - INFO - Hybrid forecast saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 19:16:03,309 - EquiRidePipeline - INFO - SUCCESS Stage 4 Complete: Hybrid Forecast predictions ready at datasets/forecast_15min_predictions.csv
+2025-11-17 19:16:03,310 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:16:03,310 - EquiRidePipeline - INFO - STAGE 5: DRIVER REPOSITIONING OPTIMIZATION (PROFIT, FAIRNESS, ECO)
+2025-11-17 19:16:03,310 - src.optimization.assignments - INFO - Fetching inputs for Repositioning Plan generation...
+2025-11-17 19:16:03,330 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv with 3 rows.
+2025-11-17 19:16:03,331 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:16:03,332 - src.data.utils - INFO - Generated 67 deterministic available drivers.
+2025-11-17 19:16:03,332 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:16:03,333 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:16:03,674 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 19:16:03,680 - src.data.utils - INFO - Derived anomaly flags based on top 5 riskiest zones using bookings_lag_1.
+2025-11-17 19:16:03,687 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:16:03,688 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 19:16:03,689 - src.data.utils - INFO - Generated deterministic driver history for 100 drivers.
+2025-11-17 19:16:03,690 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:16:03,691 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 19:16:03,692 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:16:03,694 - src.data.utils - INFO - Generated deterministic driver-to-zone distance matrix shape: (100, 67)
+2025-11-17 19:16:03,696 - src.optimization.assignments - WARNING - Eco data shape mismatch: (100, 67) != (67, 67). Using default 10km distances.
+2025-11-17 19:16:03,722 - src.optimization.assignments - INFO - Assignments completed: 67 drivers assigned.
+2025-11-17 19:16:03,727 - EquiRidePipeline - INFO - SUCCESS Stage 5 Complete: Repositioning Plan saved to datasets/repositioning_plan.csv
+2025-11-17 19:16:03,727 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:16:03,727 - EquiRidePipeline - INFO - STAGE 6: SURGE ALERT DETECTION & NOTIFICATION
+2025-11-17 19:16:03,743 - EquiRidePipeline - INFO - SUCCESS Twilio client initialized successfully.
+2025-11-17 19:16:03,746 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] START    | 
+2025-11-17 19:16:03,747 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] SUCCESS  | alerts_found=0
+2025-11-17 19:16:03,747 - EquiRidePipeline - INFO - No forecast surge detected above threshold.
+2025-11-17 19:16:03,748 - EquiRidePipeline - INFO - SUCCESS Stage 6 Complete: 0 forecast-based alerts processed
+2025-11-17 19:16:03,748 - EquiRidePipeline - INFO - 
+================================================================================
+2025-11-17 19:16:03,749 - EquiRidePipeline - INFO -  PIPELINE COMPLETED SUCCESSFULLY
+2025-11-17 19:16:03,749 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:16:03,750 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Feature store connection closed
+2025-11-17 19:16:03,750 - EquiRidePipeline - INFO - End time: 2025-11-17 19:16:03
+2025-11-17 19:16:03,751 - EquiRidePipeline - INFO - 
+SUMMARY:
+2025-11-17 19:16:03,751 - EquiRidePipeline - INFO -    Records processed: 18000
+2025-11-17 19:16:03,751 - EquiRidePipeline - INFO -    Features generated: 126
+2025-11-17 19:16:03,752 - EquiRidePipeline - INFO -    Batch ID: batch_20251117_191555
+2025-11-17 19:16:03,752 - EquiRidePipeline - INFO -    Alerts processed: 0
+2025-11-17 19:16:03,753 - EquiRidePipeline - INFO -    Repositioning Plan created: 67 assignments
+2025-11-17 19:16:03,754 - EquiRidePipeline - INFO - 
+OUTPUT FILES:
+2025-11-17 19:16:03,754 - EquiRidePipeline - INFO -    Processed data: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv
+2025-11-17 19:16:03,755 - EquiRidePipeline - INFO -    Engineered features: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 19:16:03,755 - EquiRidePipeline - INFO -    Forecast predictions: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 19:16:03,756 - EquiRidePipeline - INFO -    Repositioning Plan: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/repositioning_plan.csv
+2025-11-17 19:16:03,756 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:22:19,472 - EquiRidePipeline - INFO - 
+2025-11-17 19:22:19,473 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:22:19,473 - EquiRidePipeline - INFO -           EQUI-RIDE SURGE AI - FULL PRODUCTION RUN          
+2025-11-17 19:22:19,473 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:22:19,474 - EquiRidePipeline - INFO - Pipeline started at: 2025-11-17 19:22:19
+2025-11-17 19:22:19,474 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:22:19,474 - EquiRidePipeline - INFO - 
+2025-11-17 19:22:19,476 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:22:19,476 - EquiRidePipeline - INFO - STAGE 1: DATA CLEANING & ALIGNMENT
+2025-11-17 19:22:19,476 - EquiRidePipeline - INFO - 
+========================================
+2025-11-17 19:22:19,477 - EquiRidePipeline - INFO - [DataCleaner] Starting full cleaning pipeline.
+2025-11-17 19:22:19,478 - EquiRidePipeline - INFO - ========================================
+2025-11-17 19:22:19,478 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] START    | file=C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/Data_set.csv
+2025-11-17 19:22:19,609 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] SUCCESS  | rows=18000, cols=41
+2025-11-17 19:22:19,610 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] START    | 
+2025-11-17 19:22:19,820 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] SUCCESS  | 
+2025-11-17 19:22:19,822 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] START    | 
+2025-11-17 19:22:19,854 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] SUCCESS  | removed=0
+2025-11-17 19:22:19,856 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] START    | 
+2025-11-17 19:22:19,880 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] SUCCESS  | 
+2025-11-17 19:22:19,882 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] START    | 
+2025-11-17 19:22:19,896 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] SUCCESS  | 
+2025-11-17 19:22:19,897 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] START    | 
+2025-11-17 19:22:19,934 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] SUCCESS  | filled=0
+2025-11-17 19:22:20,392 - EquiRidePipeline - INFO - [DataCleaner] SUCCESS: Cleaned data saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 records.
+2025-11-17 19:22:20,392 - EquiRidePipeline - INFO - SUCCESS Stage 1 Complete: 18000 records cleaned
+2025-11-17 19:22:20,393 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:22:20,393 - EquiRidePipeline - INFO - STAGE 2: FEATURE ENGINEERING
+2025-11-17 19:22:20,393 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 19:22:20,393 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - STARTED
+2025-11-17 19:22:20,394 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 19:22:20,589 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 rows.
+2025-11-17 19:22:20,590 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] START    | 
+2025-11-17 19:22:20,596 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] SUCCESS  | features=6
+2025-11-17 19:22:20,597 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] START    | 
+2025-11-17 19:22:20,623 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] SUCCESS  | features=4
+2025-11-17 19:22:20,624 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] START    | 
+2025-11-17 19:22:21,170 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] SUCCESS  | features=40
+2025-11-17 19:22:21,171 - EquiRidePipeline - INFO - [LAG_FEATURES        ] START    | 
+2025-11-17 19:22:21,206 - EquiRidePipeline - INFO - [LAG_FEATURES        ] SUCCESS  | features=24
+2025-11-17 19:22:21,207 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] START    | 
+2025-11-17 19:22:21,216 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] SUCCESS  | features=4
+2025-11-17 19:22:21,217 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] START    | 
+2025-11-17 19:22:21,293 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] SUCCESS  | features=4, anomalies_detected=762
+2025-11-17 19:22:21,294 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] START    | 
+2025-11-17 19:22:21,300 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] SUCCESS  | features=4
+2025-11-17 19:22:23,089 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 19:22:23,089 - EquiRidePipeline - INFO - SUCCESS Engineered features saved: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 19:22:23,090 - EquiRidePipeline - INFO - SUCCESS Shape: (18000, 134)
+2025-11-17 19:22:23,090 - EquiRidePipeline - INFO - SUCCESS New features created: 86
+2025-11-17 19:22:23,090 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - COMPLETED
+2025-11-17 19:22:23,091 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 19:22:23,091 - EquiRidePipeline - INFO - SUCCESS Stage 2 Complete: 134 features generated
+2025-11-17 19:22:23,091 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:22:23,092 - EquiRidePipeline - INFO - STAGE 3: FEATURE STORE MANAGEMENT
+2025-11-17 19:22:23,096 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Connected to feature store: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\data/feature_store/surge_features.db
+2025-11-17 19:22:23,097 - EquiRidePipeline - INFO - [CREATE_TABLES       ] START    | 
+2025-11-17 19:22:23,098 - EquiRidePipeline - INFO - [CREATE_TABLES       ] SUCCESS  | 
+2025-11-17 19:22:23,100 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] START    | batch=batch_20251117_192219
+2025-11-17 19:22:23,271 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] SUCCESS  | inserted=18000
+2025-11-17 19:22:23,276 - EquiRidePipeline - INFO - SUCCESS Stage 3 Complete: 18000 records inserted into feature store
+2025-11-17 19:22:23,277 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:22:23,277 - EquiRidePipeline - INFO - STAGE 4: MODEL INFERENCE (HYBRID ENSEMBLE)
+2025-11-17 19:22:23,278 - src.models.infer - INFO - Starting HYBRID ENSEMBLE inference using features from datasets/engineered_features.csv...
+2025-11-17 19:22:23,658 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 19:22:23,661 - src.models.infer - INFO - Inference timestamp: 2025-12-18 00:00:00, Zones: 3
+2025-11-17 19:22:24,209 - src.utils - INFO - Loaded LGBM model via joblib from src/models/lgb_bookings_1step.pkl
+2025-11-17 19:22:24,210 - src.utils - INFO - Loaded object is a tuple, extracting first element as model.
+2025-11-17 19:22:26,218 - src.models.infer - INFO - LightGBM inference successful.
+2025-11-17 19:22:26,248 - src.utils - INFO - Successfully loaded GraphWaveNet model from src/models/gwn_L12.pt.
+2025-11-17 19:22:26,251 - src.utils - INFO - Loaded zone list with 67 zones.
+2025-11-17 19:22:26,285 - src.models.infer - INFO - GNN inference successful.
+2025-11-17 19:22:26,289 - src.models.infer - INFO - Hybrid forecast saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 19:22:26,296 - EquiRidePipeline - INFO - SUCCESS Stage 4 Complete: Hybrid Forecast predictions ready at datasets/forecast_15min_predictions.csv
+2025-11-17 19:22:26,296 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:22:26,296 - EquiRidePipeline - INFO - STAGE 5: DRIVER REPOSITIONING OPTIMIZATION (PROFIT, FAIRNESS, ECO)
+2025-11-17 19:22:26,296 - src.optimization.assignments - INFO - Fetching inputs for Repositioning Plan generation...
+2025-11-17 19:22:26,320 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv with 3 rows.
+2025-11-17 19:22:26,321 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:22:26,322 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 19:22:26,322 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:22:26,323 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:22:26,676 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 19:22:26,681 - src.data.utils - INFO - Derived anomaly flags based on top 5 riskiest zones using bookings_lag_1.
+2025-11-17 19:22:26,686 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:22:26,687 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 19:22:26,687 - src.data.utils - INFO - Generated deterministic driver history for 100 drivers.
+2025-11-17 19:22:26,688 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:22:26,688 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 19:22:26,689 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 19:22:26,690 - src.data.utils - INFO - Generated deterministic driver-to-zone distance matrix shape: (100, 67)
+2025-11-17 19:22:26,717 - src.optimization.assignments - INFO - Assignments completed: 67 drivers assigned.
+2025-11-17 19:22:26,721 - EquiRidePipeline - INFO - SUCCESS Stage 5 Complete: Repositioning Plan saved to datasets/repositioning_plan.csv
+2025-11-17 19:22:26,722 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 19:22:26,722 - EquiRidePipeline - INFO - STAGE 6: SURGE ALERT DETECTION & NOTIFICATION
+2025-11-17 19:22:26,739 - EquiRidePipeline - INFO - SUCCESS Twilio client initialized successfully.
+2025-11-17 19:22:26,742 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] START    | 
+2025-11-17 19:22:26,745 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] SUCCESS  | alerts_found=0
+2025-11-17 19:22:26,745 - EquiRidePipeline - INFO - No forecast surge detected above threshold.
+2025-11-17 19:22:26,745 - EquiRidePipeline - INFO - SUCCESS Stage 6 Complete: 0 forecast-based alerts processed
+2025-11-17 19:22:26,745 - EquiRidePipeline - INFO - 
+================================================================================
+2025-11-17 19:22:26,745 - EquiRidePipeline - INFO -  PIPELINE COMPLETED SUCCESSFULLY
+2025-11-17 19:22:26,745 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 19:22:26,746 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Feature store connection closed
+2025-11-17 19:22:26,746 - EquiRidePipeline - INFO - End time: 2025-11-17 19:22:26
+2025-11-17 19:22:26,747 - EquiRidePipeline - INFO - 
+SUMMARY:
+2025-11-17 19:22:26,748 - EquiRidePipeline - INFO -    Records processed: 18000
+2025-11-17 19:22:26,749 - EquiRidePipeline - INFO -    Features generated: 134
+2025-11-17 19:22:26,749 - EquiRidePipeline - INFO -    Batch ID: batch_20251117_192219
+2025-11-17 19:22:26,750 - EquiRidePipeline - INFO -    Alerts processed: 0
+2025-11-17 19:22:26,750 - EquiRidePipeline - INFO -    Repositioning Plan created: 67 assignments
+2025-11-17 19:22:26,750 - EquiRidePipeline - INFO - 
+OUTPUT FILES:
+2025-11-17 19:22:26,751 - EquiRidePipeline - INFO -    Processed data: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv
+2025-11-17 19:22:26,751 - EquiRidePipeline - INFO -    Engineered features: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 19:22:26,751 - EquiRidePipeline - INFO -    Forecast predictions: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 19:22:26,752 - EquiRidePipeline - INFO -    Repositioning Plan: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/repositioning_plan.csv
+2025-11-17 19:22:26,752 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 20:33:30,726 - EquiRidePipeline - INFO - 
+2025-11-17 20:33:30,726 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 20:33:30,726 - EquiRidePipeline - INFO -           EQUI-RIDE SURGE AI - FULL PRODUCTION RUN          
+2025-11-17 20:33:30,726 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 20:33:30,726 - EquiRidePipeline - INFO - Pipeline started at: 2025-11-17 20:33:30
+2025-11-17 20:33:30,727 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 20:33:30,727 - EquiRidePipeline - INFO - 
+2025-11-17 20:33:30,728 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 20:33:30,728 - EquiRidePipeline - INFO - STAGE 1: DATA CLEANING & ALIGNMENT
+2025-11-17 20:33:30,728 - EquiRidePipeline - INFO - 
+========================================
+2025-11-17 20:33:30,728 - EquiRidePipeline - INFO - [DataCleaner] Starting full cleaning pipeline.
+2025-11-17 20:33:30,728 - EquiRidePipeline - INFO - ========================================
+2025-11-17 20:33:30,728 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] START    | file=C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/Data_set.csv
+2025-11-17 20:33:30,817 - EquiRidePipeline - INFO - [LOAD_RAW_DATA       ] SUCCESS  | rows=18000, cols=41
+2025-11-17 20:33:30,817 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] START    | 
+2025-11-17 20:33:31,025 - EquiRidePipeline - INFO - [CLEAN_NUMERIC       ] SUCCESS  | 
+2025-11-17 20:33:31,025 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] START    | 
+2025-11-17 20:33:31,047 - EquiRidePipeline - INFO - [REMOVE_DUPLICATES   ] SUCCESS  | removed=0
+2025-11-17 20:33:31,048 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] START    | 
+2025-11-17 20:33:31,061 - EquiRidePipeline - INFO - [PARSE_DATETIME      ] SUCCESS  | 
+2025-11-17 20:33:31,062 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] START    | 
+2025-11-17 20:33:31,075 - EquiRidePipeline - INFO - [ALIGN_SPATIAL_TEMPORAL] SUCCESS  | 
+2025-11-17 20:33:31,076 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] START    | 
+2025-11-17 20:33:31,104 - EquiRidePipeline - INFO - [HANDLE_MISSING      ] SUCCESS  | filled=0
+2025-11-17 20:33:31,418 - EquiRidePipeline - INFO - [DataCleaner] SUCCESS: Cleaned data saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 records.
+2025-11-17 20:33:31,418 - EquiRidePipeline - INFO - SUCCESS Stage 1 Complete: 18000 records cleaned
+2025-11-17 20:33:31,418 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 20:33:31,418 - EquiRidePipeline - INFO - STAGE 2: FEATURE ENGINEERING
+2025-11-17 20:33:31,418 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 20:33:31,419 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - STARTED
+2025-11-17 20:33:31,419 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 20:33:31,656 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv with 18000 rows.
+2025-11-17 20:33:31,657 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] START    | 
+2025-11-17 20:33:31,660 - EquiRidePipeline - INFO - [DEMAND_FEATURES     ] SUCCESS  | features=6
+2025-11-17 20:33:31,661 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] START    | 
+2025-11-17 20:33:31,682 - EquiRidePipeline - INFO - [TRAFFIC_FEATURES    ] SUCCESS  | features=4
+2025-11-17 20:33:31,684 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] START    | 
+2025-11-17 20:33:32,110 - EquiRidePipeline - INFO - [ROLLING_FEATURES    ] SUCCESS  | features=40
+2025-11-17 20:33:32,110 - EquiRidePipeline - INFO - [LAG_FEATURES        ] START    | 
+2025-11-17 20:33:32,142 - EquiRidePipeline - INFO - [LAG_FEATURES        ] SUCCESS  | features=24
+2025-11-17 20:33:32,142 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] START    | 
+2025-11-17 20:33:32,146 - EquiRidePipeline - INFO - [STATIC_TEMPORAL     ] SUCCESS  | features=4
+2025-11-17 20:33:32,147 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] START    | 
+2025-11-17 20:33:32,204 - EquiRidePipeline - INFO - [ANOMALY_FEATURES    ] SUCCESS  | features=4, anomalies_detected=762
+2025-11-17 20:33:32,204 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] START    | 
+2025-11-17 20:33:32,209 - EquiRidePipeline - INFO - [WEATHER_EVENT_FEATURES] SUCCESS  | features=4
+2025-11-17 20:33:33,584 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 20:33:33,584 - EquiRidePipeline - INFO - SUCCESS Engineered features saved: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 20:33:33,584 - EquiRidePipeline - INFO - SUCCESS Shape: (18000, 134)
+2025-11-17 20:33:33,585 - EquiRidePipeline - INFO - SUCCESS New features created: 86
+2025-11-17 20:33:33,585 - EquiRidePipeline - INFO - FEATURE ENGINEERING PIPELINE - COMPLETED
+2025-11-17 20:33:33,585 - EquiRidePipeline - INFO - ======================================================================
+2025-11-17 20:33:33,585 - EquiRidePipeline - INFO - SUCCESS Stage 2 Complete: 134 features generated
+2025-11-17 20:33:33,585 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 20:33:33,585 - EquiRidePipeline - INFO - STAGE 3: FEATURE STORE MANAGEMENT
+2025-11-17 20:33:33,589 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Connected to feature store: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\data/feature_store/surge_features.db
+2025-11-17 20:33:33,589 - EquiRidePipeline - INFO - [CREATE_TABLES       ] START    | 
+2025-11-17 20:33:33,590 - EquiRidePipeline - INFO - [CREATE_TABLES       ] SUCCESS  | 
+2025-11-17 20:33:33,590 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] START    | batch=batch_20251117_203330
+2025-11-17 20:33:33,688 - EquiRidePipeline - INFO - [INSERT_FEATURES     ] SUCCESS  | inserted=18000
+2025-11-17 20:33:33,691 - EquiRidePipeline - INFO - SUCCESS Stage 3 Complete: 18000 records inserted into feature store
+2025-11-17 20:33:33,691 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 20:33:33,691 - EquiRidePipeline - INFO - STAGE 4: MODEL INFERENCE (HYBRID ENSEMBLE)
+2025-11-17 20:33:33,691 - src.models.infer - INFO - Starting HYBRID ENSEMBLE inference using features from datasets/engineered_features.csv...
+2025-11-17 20:33:33,958 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 20:33:33,960 - src.models.infer - INFO - Using input features from data timestamp: 2025-12-18 00:00:00
+2025-11-17 20:33:34,364 - src.utils - INFO - Loaded LGBM model via joblib from src/models/lgb_bookings_1step.pkl
+2025-11-17 20:33:34,364 - src.utils - INFO - Loaded object is a tuple, extracting first element as model.
+2025-11-17 20:33:38,111 - src.utils - INFO - Successfully loaded GraphWaveNet model from src/models/gwn_L12.pt.
+2025-11-17 20:33:38,137 - src.utils - INFO - Loaded zone list with 67 zones.
+2025-11-17 20:33:38,173 - src.models.infer - INFO - Hybrid forecast generated for 2025-11-17 20:48:38 and saved to C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 20:33:38,175 - EquiRidePipeline - INFO - SUCCESS Stage 4 Complete: Hybrid Forecast predictions ready at datasets/forecast_15min_predictions.csv
+2025-11-17 20:33:38,175 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 20:33:38,176 - EquiRidePipeline - INFO - STAGE 5: DRIVER REPOSITIONING OPTIMIZATION (PROFIT, FAIRNESS, ECO)
+2025-11-17 20:33:38,176 - src.optimization.assignments - INFO - Fetching inputs for Repositioning Plan generation...
+2025-11-17 20:33:38,192 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv with 3 rows.
+2025-11-17 20:33:38,192 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 20:33:38,192 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 20:33:38,193 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 20:33:38,194 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 20:33:38,455 - src.utils - INFO - Successfully loaded data from: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv with 18000 rows.
+2025-11-17 20:33:38,459 - src.data.utils - INFO - Derived anomaly flags based on top 5 riskiest zones using bookings_lag_1.
+2025-11-17 20:33:38,462 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 20:33:38,462 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 20:33:38,463 - src.data.utils - INFO - Generated deterministic driver history for 100 drivers.
+2025-11-17 20:33:38,463 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 20:33:38,464 - src.data.utils - INFO - Generated 100 deterministic available drivers.
+2025-11-17 20:33:38,464 - src.data.utils - INFO - Loaded canonical zone list with 67 zones.
+2025-11-17 20:33:38,465 - src.data.utils - INFO - Generated deterministic driver-to-zone distance matrix shape: (100, 67)
+2025-11-17 20:33:38,489 - src.optimization.assignments - INFO - Assignments completed: 67 drivers assigned.
+2025-11-17 20:33:38,490 - EquiRidePipeline - INFO - SUCCESS Stage 5 Complete: Repositioning Plan saved to datasets/repositioning_plan.csv
+2025-11-17 20:33:38,490 - EquiRidePipeline - INFO - 
+********************************************************************************
+2025-11-17 20:33:38,491 - EquiRidePipeline - INFO - STAGE 6: SURGE ALERT DETECTION & NOTIFICATION
+2025-11-17 20:33:38,498 - EquiRidePipeline - INFO - SUCCESS Twilio client initialized successfully.
+2025-11-17 20:33:38,500 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] START    | 
+2025-11-17 20:33:38,503 - EquiRidePipeline - INFO - [CHECK_FORECAST_SURGE] SUCCESS  | alerts_found=0
+2025-11-17 20:33:38,504 - EquiRidePipeline - INFO - No forecast surge detected above threshold.
+2025-11-17 20:33:38,504 - EquiRidePipeline - INFO - SUCCESS Stage 6 Complete: 0 forecast-based alerts processed
+2025-11-17 20:33:38,504 - EquiRidePipeline - INFO - 
+================================================================================
+2025-11-17 20:33:38,504 - EquiRidePipeline - INFO -  PIPELINE COMPLETED SUCCESSFULLY
+2025-11-17 20:33:38,504 - EquiRidePipeline - INFO - ================================================================================
+2025-11-17 20:33:38,504 - EquiRidePipeline - INFO - [FeatureStore] SUCCESS Feature store connection closed
+2025-11-17 20:33:38,505 - EquiRidePipeline - INFO - End time: 2025-11-17 20:33:38
+2025-11-17 20:33:38,505 - EquiRidePipeline - INFO - 
+SUMMARY:
+2025-11-17 20:33:38,505 - EquiRidePipeline - INFO -    Records processed: 18000
+2025-11-17 20:33:38,505 - EquiRidePipeline - INFO -    Features generated: 134
+2025-11-17 20:33:38,505 - EquiRidePipeline - INFO -    Batch ID: batch_20251117_203330
+2025-11-17 20:33:38,505 - EquiRidePipeline - INFO -    Alerts processed: 0
+2025-11-17 20:33:38,505 - EquiRidePipeline - INFO -    Repositioning Plan created: 67 assignments
+2025-11-17 20:33:38,506 - EquiRidePipeline - INFO - 
+OUTPUT FILES:
+2025-11-17 20:33:38,506 - EquiRidePipeline - INFO -    Processed data: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets\processed_data.csv
+2025-11-17 20:33:38,506 - EquiRidePipeline - INFO -    Engineered features: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/engineered_features.csv
+2025-11-17 20:33:38,506 - EquiRidePipeline - INFO -    Forecast predictions: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/forecast_15min_predictions.csv
+2025-11-17 20:33:38,506 - EquiRidePipeline - INFO -    Repositioning Plan: C:\Users\Dhatri P Sriram\Desktop\Dhatri\Projects\EquiRide-Surge-AI-Final\datasets/repositioning_plan.csv
+2025-11-17 20:33:38,506 - EquiRidePipeline - INFO - ================================================================================

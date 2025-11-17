@@ -1,4 +1,3 @@
-# src/models/infer.py
 import pandas as pd
 import logging
 import numpy as np
@@ -10,101 +9,148 @@ from src.utils import load_csv_data, load_model, predict_demand, _resolve_projec
 
 logger = logging.getLogger(__name__)
 
-# --- MODEL CONFIGURATION FOR HYBRID ENSEMBLE ---
-# Define paths for both models used in the ensemble
+# --- MODEL CONFIGURATION ---
 LGBM_MODEL_PATH = 'src/models/lgb_bookings_1step.pkl'
 GNN_MODEL_PATH = 'src/models/gwn_L12.pt' 
-
 FEATURES_PATH = 'datasets/engineered_features.csv'
 MODEL_PREDICTIONS_PATH = 'datasets/forecast_15min_predictions.csv'
 
+# --- EXACT FEATURE SETS ---
+LGBM_FEATURES = [
+    'bookings_lag_1', 'bookings_lag_2', 'bookings_lag_3', 'bookings_lag_4',
+    'traffic_volume', 'average_speed', 'congestion_level', 'temperature', 
+    'drivers_earnings', 'distance_travelled_km', 
+    'hour', 'day_of_week', 'is_weekend', 'zone_lbl', 'event_lbl'
+]
+
+GNN_FEATURES = [
+    'completed_trips', 'traffic_volume', 'average_speed', 
+    'congestion_level', 'temperature', 'drivers_earnings', 
+    'distance_travelled_km', 'event_importance', 
+    'event_type', 'pred_bookings'
+]
 
 def infer_predictions(features_path=FEATURES_PATH, output_path=MODEL_PREDICTIONS_PATH):
     """
-    Loads the Hybrid Model (LGBM + GNN), infers future demand by averaging their 
-    predictions, and saves the ensemble forecast.
+    Runs Hybrid Inference using the latest STABLE data snapshot.
     """
-    logger.info(f"Starting HYBRID ENSEMBLE inference (LGBM + GNN) using features from {features_path}...")
+    logger.info(f"Starting HYBRID ENSEMBLE inference using features from {features_path}...")
     
-    # 1. Load Features (Latest Snapshot)
-    # Use _resolve_project_path to ensure the engineered features file is found
+    # 1. Load Features
     feature_df = load_csv_data(_resolve_project_path(features_path), parse_dates=['timestamp'])
     if feature_df.empty:
         logger.error("Feature data is empty. Cannot run inference.")
-        # Save empty output file using the resolved path to prevent later stage failures
-        pd.DataFrame({'h3_index': [], 'next_time': [], 'pred_bookings_15min': []}).to_csv(_resolve_project_path(output_path), index=False)
         return pd.DataFrame()
 
-    # --- Feature Preparation ---
-    feature_df.columns = [c.strip().lower() for c in feature_df.columns]
-    rename_map = {'h3': 'h3_index', 'hex_id': 'h3_index', 'zone_id': 'h3_index', 'bookings': 'bookings'}
+    # 2. Preprocessing & renaming
+    feature_df.columns = [c.strip().lower().replace(' ', '_').replace('(', '').replace(')', '').replace("'", "") for c in feature_df.columns]
+    rename_map = {'h3': 'h3_index', 'hex_id': 'h3_index', 'zone_id': 'h3_index', 'zone': 'h3_index', 'bookings': 'bookings', 'weekday': 'day_of_week'}
     feature_df.rename(columns=rename_map, inplace=True)
 
-    if 'h3_index' not in feature_df.columns:
-        logger.error(f"Missing 'h3_index' column. Columns found: {list(feature_df.columns)}")
-        return pd.DataFrame()
-        
+    # 3. Get Latest *STABLE* Snapshot
+    # FIX: Don't just take max(). Find the latest timestamp that has data for many zones.
     if 'timestamp' not in feature_df.columns:
-        logger.error("Missing 'timestamp' column in features. Cannot determine latest features.")
-        return pd.DataFrame()
-        
-    latest_time = feature_df['timestamp'].max()
-    target_features = feature_df[feature_df['timestamp'] == latest_time].copy()
-    
-    if target_features.empty:
-        logger.error("Latest feature data slice is empty. Cannot run inference.")
+        logger.error("Missing 'timestamp' column.")
         return pd.DataFrame()
 
-    # ----------------------------------------------------
-    # --- HYBRID MODEL PREDICTION ---
-    # ----------------------------------------------------
+    # Get unique timestamps sorted
+    unique_times = np.sort(feature_df['timestamp'].unique())
     
-    # A. Load and Predict with LGBM Model (The time-series component)
+    target_features = pd.DataFrame()
+    latest_data_time = None
+
+    # Look backwards from the end to find a snapshot with > 10 zones
+    # This avoids "tail-end" issues where the last second of data is incomplete
+    for ts in unique_times[::-1]:
+        slice_df = feature_df[feature_df['timestamp'] == ts]
+        if len(slice_df) > 10: # Threshold: Assume a valid snapshot has at least 10 zones
+            target_features = slice_df.copy()
+            latest_data_time = ts
+            break
+    
+    # Fallback if nothing found
+    if target_features.empty:
+        logger.warning("No complete snapshot found. Using absolute latest (might be partial).")
+        latest_data_time = feature_df['timestamp'].max()
+        target_features = feature_df[feature_df['timestamp'] == latest_data_time].copy()
+
+    if target_features.empty:
+        logger.error("Target features empty.")
+        return pd.DataFrame()
+        
+    logger.info(f"Using input features from data timestamp: {latest_data_time} (Zones: {len(target_features)})")
+
+    # --- Prepare Missing Columns ---
+    if 'zone_lbl' not in target_features.columns: target_features['zone_lbl'] = pd.factorize(target_features['h3_index'])[0]
+    if 'event_lbl' not in target_features.columns: target_features['event_lbl'] = 0
+    if 'is_weekend' not in target_features.columns:
+        if 'day_of_week' in target_features.columns: target_features['is_weekend'] = target_features['day_of_week'].apply(lambda x: 1 if x >= 5 else 0)
+        else: target_features['is_weekend'] = 0
+    
+    target_features['event_type'] = pd.to_numeric(target_features.get('event_type', 0), errors='coerce').fillna(0)
+
+    # ----------------------------------------------------
+    # STEP A: LightGBM Prediction
+    # ----------------------------------------------------
+    lgbm_preds = np.zeros(len(target_features))
     try:
         lgbm_model = load_model(LGBM_MODEL_PATH)
-        lgbm_preds = predict_demand(lgbm_model, target_features)
+        missing_lgb = [c for c in LGBM_FEATURES if c not in target_features.columns]
+        if missing_lgb:
+            for c in missing_lgb: target_features[c] = 0
+            
+        lgbm_input = target_features[LGBM_FEATURES].copy()
+        lgbm_preds = predict_demand(lgbm_model, lgbm_input)
+        target_features['pred_bookings'] = lgbm_preds 
+        
     except Exception as e:
-        logger.error(f"LGBM Prediction failed ({LGBM_MODEL_PATH}). Using zero array: {e}")
-        lgbm_preds = np.zeros(len(target_features))
+        logger.error(f"LGBM Prediction failed: {e}")
+        target_features['pred_bookings'] = 0
 
-    # B. Load and Predict with GNN Model (The spatial component)
+    # ----------------------------------------------------
+    # STEP B: GNN Prediction
+    # ----------------------------------------------------
+    gnn_preds = np.zeros(len(target_features))
     try:
         gnn_model = load_model(GNN_MODEL_PATH)
-        gnn_preds = predict_demand(gnn_model, target_features)
-    except Exception as e:
-        logger.error(f"GNN Prediction failed ({GNN_MODEL_PATH}). Using zero array: {e}")
-        gnn_preds = np.zeros(len(target_features))
+        missing_gnn = [c for c in GNN_FEATURES if c not in target_features.columns]
+        if missing_gnn:
+             for c in missing_gnn: target_features[c] = 0
+
+        gnn_input_df = target_features[['h3_index', 'timestamp'] + GNN_FEATURES].copy()
+        gnn_preds = predict_demand(gnn_model, gnn_input_df)
         
-    # Ensure prediction arrays are consistent length
-    if len(lgbm_preds) != len(gnn_preds):
-        min_len = min(len(lgbm_preds), len(gnn_preds))
-        # Truncate to the minimum length to allow ensemble averaging
-        lgbm_preds = lgbm_preds[:min_len]
-        gnn_preds = gnn_preds[:min_len]
-        target_features = target_features.iloc[:min_len]
-        logger.warning(f"Prediction length mismatch. Truncating predictions to {min_len} zones.")
+    except Exception as e:
+        logger.error(f"GNN Prediction failed: {e}")
 
+    # ----------------------------------------------------
+    # STEP C: Final Ensemble & Saving
+    # ----------------------------------------------------
+    min_len = min(len(lgbm_preds), len(gnn_preds))
+    lgbm_preds = lgbm_preds[:min_len]
+    gnn_preds = gnn_preds[:min_len]
+    target_features = target_features.iloc[:min_len]
 
-    # C. Ensemble Blending (Simple Averaging)
-    final_predictions_array = (lgbm_preds + gnn_preds) / 2.0
+    final_preds = (lgbm_preds + gnn_preds) / 2.0
     
-    # D. Calculate the predicted time slot
-    next_time = (latest_time + pd.Timedelta(minutes=15)).replace(microsecond=0)
-
-    # E. Construct the Predictions DataFrame
-    real_predictions = pd.DataFrame({
+    # Use current real-world time for "Live" appearance
+    next_time = (datetime.now() + timedelta(minutes=15)).replace(microsecond=0)
+    
+    results = pd.DataFrame({
         'h3_index': target_features['h3_index'].values,
-        'next_time': next_time,
-        'pred_bookings_15min': final_predictions_array.flatten(), 
+        'pred_bookings_15min': final_preds,
+        'next_time': next_time
     })
     
-    # 2. Save Output
-    real_predictions = real_predictions[['h3_index', 'next_time', 'pred_bookings_15min']].fillna(0)
-    # Save using the resolved path
-    real_predictions.to_csv(_resolve_project_path(output_path), index=False)
-    logger.info(f"Hybrid inference complete. Predictions saved for {len(real_predictions)} zones to {output_path}")
+    results['pred_bookings_15min'] = results['pred_bookings_15min'].clip(lower=0).round(1)
     
-    return real_predictions
+    save_path = _resolve_project_path(output_path)
+    results = results[['h3_index', 'next_time', 'pred_bookings_15min']]
+    results.to_csv(save_path, index=False)
+    
+    logger.info(f"Hybrid forecast generated for {next_time} with {len(results)} zones.")
+    
+    return results
 
 if __name__=="__main__":
     infer_predictions()

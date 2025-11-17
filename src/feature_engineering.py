@@ -35,9 +35,12 @@ class FeatureEngineer:
             df['cancellation_rate_numeric'] = safe_divide(
                 df['cancelled_bookings'], df['bookings'], default=0.0
             )
+            
+            # [FIX] Changed "drivers'_earnings" to "drivers_earnings"
             df['earnings_per_trip'] = safe_divide(
-                df["drivers'_earnings"], df['completed_trips'], default=0.0
+                df['drivers_earnings'], df['completed_trips'], default=0.0
             )
+            
             df['unfulfilled_demand'] = df['searches'] - df['completed_trips']
             df['unfulfilled_demand'] = df['unfulfilled_demand'].clip(lower=0)
             
