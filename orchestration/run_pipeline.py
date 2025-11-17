@@ -135,15 +135,11 @@ def run_complete_pipeline(config_path='config/config.yaml'):
         alert_system = AlertSystem(config, logger)
         
         # Check for surge conditions based on the new features_df
-        alerts = alert_system.check_surge_conditions(features_df)
-        logger.info(f"Surge conditions detected: {len(alerts)}")
-        
-        # Process and send alerts
-        if len(alerts) > 0:
-            # We pass the store instance for potential complex lookup
-            sent_count = alert_system.process_alerts(alerts, feature_store=store) 
-            logger.info(f"SUCCESS Stage 6 Complete: {sent_count} alerts processed")
-            
+        forecast_csv_path = MODEL_PREDICTIONS_PATH
+
+        sent_count = alert_system.process_forecast_alerts(forecast_csv_path)
+
+        logger.info(f"SUCCESS Stage 6 Complete: {sent_count} forecast-based alerts processed")  
         store.close()
         
         
@@ -156,7 +152,7 @@ def run_complete_pipeline(config_path='config/config.yaml'):
         logger.info(f"   Records processed: {len(features_df)}")
         logger.info(f"   Features generated: {len(features_df.columns)}")
         logger.info(f"   Batch ID: {batch_id}")
-        logger.info(f"   Alerts detected: {len(alerts)}")
+        logger.info(f"   Alerts detected: {sent_count}")
         logger.info(f"   Repositioning Plan created: {len(repositioning_plan_df)} assignments")
         logger.info("\nOUTPUT FILES:")
         logger.info(f"   Processed data: {processed_file}")

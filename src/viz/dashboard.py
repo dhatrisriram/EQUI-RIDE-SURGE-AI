@@ -1,284 +1,278 @@
 # src/viz/dashboard.py
 import streamlit as st
 import pandas as pd
-import json
 import pydeck as pdk
-import time
-import numpy as np
 from pathlib import Path
-from ast import literal_eval
 import h3
+import os
+import time
 
-# --- 1. FILE PATHS (These are correct) ---
+# --- 1. FILE PATHS ---
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "datasets"
 FORECAST_CSV = DATA_DIR / "forecast_15min_predictions.csv"
 REPOSITION_CSV = DATA_DIR / "repositioning_plan.csv"
-PROCESSED_DATA_CSV = DATA_DIR / "processed_data.csv" 
+PROCESSED_DATA_CSV = DATA_DIR / "processed_data.csv"
+ALERTS_CSV = DATA_DIR / "surge_alerts.csv"
 CSS_PATH = Path(__file__).resolve().parent / "styles.css"
 
-def local_css(file_path):
+# --- 2. CREDENTIALS ---
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "ACd16431c489770b29a82b76faa8e98b52")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "3b9cb2d150821ae0aa6a4d69265dd5bb")
+TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER", "+14784006602")
+DEFAULT_ALERT_PHONE = os.getenv("ALERT_PHONE_NUMBER", "+919611751505")
+
+def local_css(file_path: Path):
     if file_path.exists():
-        with open(file_path) as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# --- 2. FINAL FIX FOR COORDINATE LOADING ---
-@st.cache_data
-def load_coordinate_mapping(path):
-    """
-    Loads processed_data.csv ONCE to create a mapping
-    from h3_index (the H3 string) to its coordinates AND its name.
-    """
-    if not path.exists():
-        st.error(f"Missing processed data CSV at {path}. Run pipeline.")
-        return pd.DataFrame()
+def _normalize_columns(df: pd.DataFrame):
+    df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
+    return df
 
+# --- 3. DATA LOADING ---
+@st.cache_data
+def load_coordinate_mapping(path: Path) -> pd.DataFrame:
+    if not path.exists(): return pd.DataFrame()
     df = pd.read_csv(path)
+    df = _normalize_columns(df)
     
-    # --- THIS IS THE FIX ---
-    # Use the correct column names from processed_data.csv
-    coords_df = df[['h3_index', 'latitude', 'longitude', 'Area Name']].drop_duplicates()
-    
-    # Rename them to 'lat', 'lon', and 'zone_name' for the rest of the dashboard
-    coords_df = coords_df.rename(columns={
-        'latitude': 'lat', 
-        'longitude': 'lon', 
-        'Area Name': 'zone_name'
-    })
+    h3_col = next((c for c in df.columns if c in ("h3_index", "h3", "hex_id")), None)
+    lat_col = next((c for c in df.columns if c in ("latitude", "lat")), None)
+    lon_col = next((c for c in df.columns if c in ("longitude", "lon", "lng")), None)
+    zone_col = next((c for c in df.columns if c in ("area_name", "area", "zone_name", "name")), None)
+
+    if not (h3_col and lat_col and lon_col): return pd.DataFrame()
+
+    cols = [h3_col, lat_col, lon_col]
+    if zone_col: cols.append(zone_col)
+        
+    coords_df = df[cols].drop_duplicates(subset=[h3_col]).copy()
+    coords_df = coords_df.rename(columns={h3_col: "h3_index", lat_col: "lat", lon_col: "lon"})
+    if zone_col: coords_df = coords_df.rename(columns={zone_col: "zone_name"})
+    else: coords_df["zone_name"] = coords_df["h3_index"].astype(str)
     return coords_df
 
-# --- 3. UPDATED FORECAST LOADING ---
-def load_forecasts(forecast_path, coords_df):
-    """
-    Loads REAL forecast data and MERGES it with the coordinate mapping.
-    """
-    if not forecast_path.exists():
-        st.error(f"Missing forecasts CSV at {forecast_path}. Run pipeline.")
-        return pd.DataFrame()
-        
-    df = pd.read_csv(forecast_path, parse_dates=["next_time"])
-    
-    # Merge forecasts with coordinates on the H3 index
-    # This will now also bring in the 'zone_name' column
-    df_merged = pd.merge(df, coords_df, on="h3_index", how="left")
-    
-    # Rename columns to match the dashboard's expected names
-    df_merged = df_merged.rename(columns={
-        "h3_index": "h3",
-        "pred_bookings_15min": "surge_score",
-        "next_time": "timestamp"
-    })
+@st.cache_data
+def load_forecasts(forecast_path: Path) -> pd.DataFrame:
+    if not forecast_path.exists(): return pd.DataFrame()
+    df = pd.read_csv(forecast_path)
+    df = _normalize_columns(df)
 
-    df_merged = df_merged.dropna(subset=['lat', 'lon'])
-    
-    if not df_merged.empty:
-        max_score = df_merged['surge_score'].max()
-        if max_score > 0:
-            df_merged['surge_score'] = df_merged['surge_score'] / max_score
-        else:
-            df_merged['surge_score'] = 0.0
-    
-    df_merged['contrib'] = pd.Series(dtype='object')
-    return df_merged
+    h3_col = next((c for c in df.columns if c in ("h3_index", "h3")), None)
+    score_col = next((c for c in df.columns if c in ("pred_bookings_15min", "pred_bookings", "pred", "surge_score")), None)
+    time_col = next((c for c in df.columns if c in ("next_time","timestamp","time")), None)
 
-# --- 4. UPDATED REPOSITION LOADING ---
+    if not (h3_col and score_col and time_col): return pd.DataFrame()
+
+    df[time_col] = pd.to_datetime(df[time_col], errors="coerce")
+    df = df.rename(columns={h3_col: "h3", score_col: "surge_score", time_col: "timestamp"})
+    df = df.dropna(subset=["h3", "timestamp"])
+    df["surge_score"] = pd.to_numeric(df["surge_score"], errors="coerce").fillna(0.0)
+    return df
+
+def merge_forecast_with_coords(forecast_df, coords_df, selected_ts):
+    if forecast_df.empty or coords_df.empty: return pd.DataFrame()
+    # Match without microseconds for safer slider interaction
+    subset = forecast_df[forecast_df["timestamp"].dt.floor('S') == selected_ts.floor('S')].copy()
+    
+    if subset.empty:
+        subset = forecast_df.copy() # Fallback
+
+    merged = pd.merge(subset, coords_df, left_on="h3", right_on="h3_index", how="left")
+    merged = merged.dropna(subset=["lat", "lon"])
+    
+    max_score = merged["surge_score"].max() if not merged.empty else 0
+    if max_score > 0:
+        merged["surge_score"] = merged["surge_score"] / max_score
+    return merged
+
 def load_reposition(reposition_path, coords_df):
-    """
-    Loads REAL repositioning data and MERGES it with the coordinate mapping.
-    """
-    if not reposition_path.exists():
-        st.warning(f"Missing repositioning CSV at {reposition_path}. Run pipeline.")
-        return []
-
+    if not reposition_path.exists(): return []
     df = pd.read_csv(reposition_path)
+    df = _normalize_columns(df)
+    assigned_col = next((c for c in df.columns if c in ("assigned_zone", "assigned_h3", "h3_index")), None)
+    if not assigned_col: return []
+        
+    merged = pd.merge(df, coords_df, left_on=assigned_col, right_on="h3_index", how="left")
+    merged = merged.rename(columns={"lat": "to_lat", "lon": "to_lon"})
+    merged = merged.dropna(subset=["to_lat", "to_lon"])
     
-    # Merge with coordinates to get the 'to' lat/lon
-    # Note: assigned_zone column contains the H3 string
-    df = pd.merge(df, coords_df, left_on='assigned_zone', right_on='h3_index', how='left')
-    df = df.rename(columns={'lat': 'to_lat', 'lon': 'to_lon'})
-    df = df.dropna(subset=['to_lat', 'to_lon'])
-    
-    # Simulate 'from' coordinates by picking random zones
-    if not coords_df.empty and len(df) > 0:
-        # Get a random sample of coordinates from all available zones
-        random_coords = coords_df.sample(n=len(df), replace=True).reset_index(drop=True)
-        df['from_lat'] = random_coords['lat']
-        df['from_lon'] = random_coords['lon']
-    else:
-        # Fallback if coords_df is empty for some reason
-        df['from_lat'] = df['to_lat'] + np.random.uniform(-0.05, 0.05, size=len(df))
-        df['from_lon'] = df['to_lon'] + np.random.uniform(-0.05, 0.05, size=len(df))
+    if "from_lat" not in merged.columns:
+        if not coords_df.empty and len(merged) <= len(coords_df):
+            rnd = coords_df.sample(n=len(merged), replace=True).reset_index(drop=True)
+            merged["from_lat"] = rnd["lat"].values
+            merged["from_lon"] = rnd["lon"].values
+        else:
+            merged["from_lat"] = merged["to_lat"] + 0.01
+            merged["from_lon"] = merged["to_lon"] + 0.01
+    return merged.to_dict(orient="records")
 
-    return df.to_dict('records')
-
-# --- 5. H3 POLYGON FUNCTION (This is correct) ---
-def h3_polygon_geojson(h3idx):
-    """
-    Converts a real H3 index string into a polygon.
-    """
+def load_alerts_for_map(alerts_path, coords_df):
+    """Only used for map dots, not for the table."""
+    if not alerts_path.exists(): return pd.DataFrame()
     try:
-        coords = h3.h3_to_geo_boundary(h3idx, geo_json=True)
-        return [[p[1], p[0]] for p in coords]
-    except:
-        return []
+        df = pd.read_csv(alerts_path)
+        df = _normalize_columns(df)
+        if "h3_index" in df.columns and not coords_df.empty:
+            if "severity" not in df.columns: df["severity"] = "HIGH"
+            merged = pd.merge(df, coords_df, on="h3_index", how="left")
+            return merged.dropna(subset=["lat", "lon"])
+        return pd.DataFrame()
+    except: return pd.DataFrame()
 
-st.set_page_config(layout="wide", page_title="EquiRide — Surge Dashboard", initial_sidebar_state="expanded")
-local_css(CSS_PATH) 
+def h3_polygon_geojson(h3idx):
+    try: return [[p[1], p[0]] for p in h3.h3_to_geo_boundary(str(h3idx), geo_json=True)]
+    except: return []
 
-st.markdown("""<div class="banner"><h1 style="margin:0; font-size:36px;">EquiRide — Surge Dashboard</h1>
-<div style="opacity:0.9">Interactive heatmap • Explainability • Reposition simulation</div></div>""", unsafe_allow_html=True)
+# --- 4. APP LAYOUT ---
+st.set_page_config(layout="wide", page_title="EquiRide Dashboard", initial_sidebar_state="expanded")
+local_css(CSS_PATH)
 
-# --- 6. DATA LOADING ORDER (This is correct) ---
+st.markdown("""
+    <div class="banner">
+      <h1 style="margin:0; font-size:36px;">EquiRide — Surge Dashboard</h1>
+      <div style="opacity:0.9">Real-time Monitoring • Driver Repositioning • Live Alerts</div>
+    </div>
+""", unsafe_allow_html=True)
+
+# Load Data
 coords_df = load_coordinate_mapping(PROCESSED_DATA_CSV)
-df = load_forecasts(FORECAST_CSV, coords_df)
-reposition = load_reposition(REPOSITION_CSV, coords_df)
+forecast_df_raw = load_forecasts(FORECAST_CSV)
+reposition_data = load_reposition(REPOSITION_CSV, coords_df)
+reposition_df = pd.DataFrame(reposition_data)
+alerts_map_df = load_alerts_for_map(ALERTS_CSV, coords_df)
 
-if df.empty:
-    st.error("No data to display. Check pipeline output files.")
+# Time Logic
+if forecast_df_raw.empty:
+    st.error("No forecast data available.")
     st.stop()
 
-# --- 7. TIME SELECTION (This is correct) ---
-unique_times = sorted(df['timestamp'].unique())
-if not unique_times:
-    st.error("No forecast data to display.")
-    st.stop()
+unique_times = sorted(pd.to_datetime(forecast_df_raw["timestamp"].dropna().unique()))
+time_strings = [t.strftime("%H:%M:%S") for t in unique_times]
 
-if len(unique_times) > 1:
-    selected_time = st.sidebar.select_slider("Forecast time", options=unique_times, value=unique_times[0])
-    st.sidebar.write("Selected:", selected_time)
+# FIX FOR RANGE ERROR: Only show slider if >1 option
+if len(time_strings) > 1:
+    selected_idx = st.sidebar.select_slider("Forecast Window", options=range(len(time_strings)), format_func=lambda x: time_strings[x])
+    selected_ts = unique_times[selected_idx]
 else:
-    selected_time = unique_times[0]
-    st.sidebar.info(f"Showing forecast for: {selected_time}")
+    selected_ts = unique_times[0]
+    st.sidebar.info(f"Live Forecast: {time_strings[0]}")
 
+st.sidebar.caption(f"Date: {selected_ts.strftime('%Y-%m-%d')}")
 
-# --- 8. MAP PREPARATION (This is correct) ---
-selected_df = df[df['timestamp'] == selected_time]
-if selected_df.empty:
-    st.warning("No forecast rows for this timestamp.")
-else:
-    layers = []
-    
-    all_scores_zero = selected_df['surge_score'].max() == 0
+selected_df = merge_forecast_with_coords(forecast_df_raw, coords_df, selected_ts)
 
-    if not all_scores_zero:
-        heat_data = [{"position":[r['lon'], r['lat']], "weight": float(r['surge_score'])} for _, r in selected_df.iterrows()]
-        layers.append(pdk.Layer(
-            "HeatmapLayer",
-            data=heat_data,
-            get_position="position",
-            get_weight="weight",
-            radiusPixels=80
-        ))
+# --- 5. MAP VISUALIZATION ---
+layers = []
+view_state = pdk.ViewState(latitude=12.9716, longitude=77.5946, zoom=11, pitch=40)
 
-    scatter_df = pd.DataFrame([{"lon":r['lon'], "lat":r['lat'], "surge":float(r['surge_score']), "h3":r['h3']} for _, r in selected_df.iterrows()])
-    layers.append(pdk.Layer(
-        "ScatterplotLayer",
-        data=scatter_df,
-        get_position=["lon","lat"],
-        get_radius=200, 
-        get_fill_color="[255*surge, 80*(1-surge), 200*(1-surge), 150]", 
-        pickable=True
-    ))
+if not selected_df.empty:
+    mid = (float(selected_df.iloc[0]["lat"]), float(selected_df.iloc[0]["lon"]))
+    view_state = pdk.ViewState(latitude=mid[0], longitude=mid[1], zoom=12, pitch=40)
 
+    # Heatmap
+    if selected_df["surge_score"].max() > 0:
+        heat_data = [{"position": [r["lon"], r["lat"]], "weight": float(r["surge_score"])} for _, r in selected_df.iterrows()]
+        layers.append(pdk.Layer("HeatmapLayer", data=heat_data, get_position="position", get_weight="weight", radiusPixels=80, opacity=0.6))
+
+    # Hexagons
     hex_polys = []
     for _, r in selected_df.iterrows():
-        poly = h3_polygon_geojson(r['h3'])
+        poly = h3_polygon_geojson(r["h3"])
         if poly:
-            hex_polys.append({"polygon": poly, "surge": float(r['surge_score'])})
-            
+            hex_polys.append({"polygon": poly, "surge": float(r["surge_score"]), "name": r.get("zone_name", "Unknown")})
+    
     if hex_polys:
-        hex_df = pd.DataFrame(hex_polys)
-        layers.append(pdk.Layer(
-            "PolygonLayer",
-            data=hex_df,
-            get_polygon="polygon",
-            get_fill_color="[255*surge, 60*(1-surge), 200*(1-surge)]",
-            pickable=True,
-            stroked=True,
-            get_line_color=[50,50,50]
-        ))
+        layers.append(pdk.Layer("PolygonLayer", data=pd.DataFrame(hex_polys), get_polygon="polygon", get_fill_color="[255*surge, 60*(1-surge), 200*(1-surge), 100]", pickable=True, stroked=True, get_line_color=[50, 50, 50], line_width_min_pixels=1, auto_highlight=True))
 
-    # reposition layers
-    if len(reposition) > 0:
-        r_df = pd.DataFrame(reposition)
-        layers.append(pdk.Layer(
-            "ScatterplotLayer",
-            data=r_df,
-            get_position=["from_lon","from_lat"],
-            get_radius=50,
-            get_fill_color=[30,144,255],
-            pickable=True
-        ))
-        layers.append(pdk.Layer(
-            "ScatterplotLayer",
-            data=r_df,
-            get_position=["to_lon","to_lat"],
-            get_radius=80,
-            get_fill_color=[50,205,50],
-            pickable=True
-        ))
-        path_data = []
-        for row in reposition:
-            path_data.append({"path":[[row['from_lon'], row['from_lat']], [row['to_lon'], row['to_lat']]], "driver": row['driver_id']})
-        layers.append(pdk.Layer(
-            "PathLayer",
-            data=path_data,
-            get_path="path",
-            width_scale=10,
-            width_min_pixels=2,
-            get_color=[160, 100, 255]
-        ))
+# Arrows
+if not reposition_df.empty:
+    layers.append(pdk.Layer("ScatterplotLayer", data=reposition_df, get_position=["to_lon", "to_lat"], get_radius=80, get_fill_color=[0, 255, 0, 200]))
+    path_data = [{"path": [[r["from_lon"], r["from_lat"]], [r["to_lon"], r["to_lat"]]]} for r in reposition_data]
+    layers.append(pdk.Layer("PathLayer", data=path_data, get_path="path", width_scale=10, width_min_pixels=2, get_color=[50, 205, 50, 200]))
 
-    mid = (selected_df.iloc[0]['lat'], selected_df.iloc[0]['lon'])
-    view_state = pdk.ViewState(latitude=mid[0], longitude=mid[1], zoom=13, pitch=30)
-    deck = pdk.Deck(layers=layers, initial_view_state=view_state, map_style="mapbox://styles/mapbox/dark-v10")
-    st.pydeck_chart(deck)
+# Alert Dots
+if not alerts_map_df.empty:
+    critical = alerts_map_df[alerts_map_df["severity"].str.upper().isin(["CRITICAL", "HIGH"])]
+    if not critical.empty:
+        layers.append(pdk.Layer("ScatterplotLayer", data=critical, get_position=["lon", "lat"], get_radius=400, get_fill_color=[255, 0, 0, 180], stroked=True, get_line_color=[255, 255, 255], line_width_min_pixels=3, pickable=True))
 
-# --- 9. FINAL FIX FOR SIDEBAR ---
-st.sidebar.header("Zone Explainability")
-# Use the 'zone_name' column we just merged in
-zone_name_options = sorted(list(selected_df['zone_name'].unique()))
+deck = pdk.Deck(layers=layers, initial_view_state=view_state, map_style="mapbox://styles/mapbox/dark-v10", tooltip={"html": "<b>Zone:</b> {name}<br/><b>Surge:</b> {surge}"})
+st.pydeck_chart(deck)
 
-if zone_name_options:
-    # Show the human-readable names in the dropdown
-    chosen_name = st.sidebar.selectbox("Zone", zone_name_options)
+# --- 9. LOWER SECTION: FLEET OPS & DISPATCH ---
+st.markdown("---")
+col1, col2 = st.columns([2, 1])
+
+with col1:
+    st.subheader("🚀 Fleet Operations Center")
     
-    # Filter the data by the chosen name
-    row = selected_df[selected_df['zone_name'] == chosen_name].iloc[0]
-    
-    st.sidebar.metric("Surge score (Normalized)", f"{row['surge_score']:.2f}")
-    # Also display the H3 index for reference
-    st.sidebar.caption(f"H3 Index: {row['h3']}")
+    if not reposition_df.empty and "profit_est" in reposition_df.columns:
+        # 1. KPI Metrics from Repositioning Plan
+        total_drivers = len(reposition_df)
+        total_profit = reposition_df["profit_est"].sum()
+        avg_dist = reposition_df["distance_km"].mean() if "distance_km" in reposition_df.columns else 0
+        
+        k1, k2, k3 = st.columns(3)
+        k1.metric("Drivers Mobilized", total_drivers, "+Active")
+        k2.metric("Proj. Revenue Upside", f"₹{total_profit:,.0f}", "High Demand")
+        k3.metric("Avg Dispatch Dist", f"{avg_dist:.1f} km", "Efficient")
 
-
-# Simulation
-st.header("Repositioning simulation (demo)")
-if st.button("Run simulation"):
-    placeholder = st.empty()
-    steps = 8
-    for s in range(1, steps+1):
-        inter = []
-        for d in reposition:
-            lat = d['from_lat'] + (d['to_lat'] - d['from_lat'])*(s/steps)
-            lon = d['from_lon'] + (d['to_lon'] - d['from_lon'])*(s/steps)
-            inter.append({"driver": d['driver_id'], "lat": lat, "lon": lon})
-        df_step = pd.DataFrame(inter)
-        layer = pdk.Layer("ScatterplotLayer", data=df_step, get_position=["lon","lat"], get_radius=100, get_fill_color=[255,200,100])
-        view = pdk.ViewState(latitude=mid[0], longitude=mid[1], zoom=13, pitch=30)
-        deck = pdk.Deck(layers=[layer], initial_view_state=view, map_style="mapbox://styles/mapbox/dark-v10")
-        placeholder.pydeck_chart(deck)
-        time.sleep(0.5)
-
-st.header("Alerts (demo)")
-to_phone = st.text_input("Send test alert to", value="+911234567890")
-msg = st.text_area("Message", value="Demo: Surge predicted. Please reposition.")
-if st.button("Send test alert"):
-    try:
-        from alert_stub import send_alert_stub 
-        success, resp = send_alert_stub("", "", "", to_phone, msg)
-        if success:
-            st.success("Alert sent (stub). Check app logs/console.")
+        # 2. Chart
+        st.caption("Top Target Zones by Profit Potential")
+        if "zone_name" in reposition_df.columns:
+            viz_df = reposition_df.groupby("zone_name")["profit_est"].sum().sort_values(ascending=False).head(7)
         else:
-            st.error("Alert failed.")
-    except ImportError:
-        st.error("Could not find 'alert_stub.py'. Make sure it's in the 'src/viz/' folder.")
+            viz_df = reposition_df.groupby("assigned_zone")["profit_est"].sum().sort_values(ascending=False).head(7)
+        st.bar_chart(viz_df, color="#00CC00") 
+    else:
+        st.info("No active repositioning plan. Fleet is stationary.")
+
+with col2:
+    st.subheader("📲 Dispatch Console")
+    with st.form("sms_form"):
+        dest_phone = st.text_input("Driver Phone", value=DEFAULT_ALERT_PHONE)
+        default_msg = "ALERT: High demand surge detected."
+        if not reposition_df.empty:
+            top_zone = reposition_df.iloc[0]['assigned_zone']
+            if not coords_df.empty:
+                name_match = coords_df[coords_df['h3_index'] == top_zone]['zone_name']
+                if not name_match.empty:
+                    top_zone = name_match.values[0]
+            default_msg = f"DISPATCH: Go to {top_zone}. High fare opportunity detected."
+        msg_body = st.text_area("Message", value=default_msg, height=100)
+        
+        if st.form_submit_button("🚀 Send Instructions"):
+            if not (TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN):
+                st.error("Missing Twilio Credentials.")
+            else:
+                try:
+                    from twilio.rest import Client
+                    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+                    m = client.messages.create(body=msg_body, from_=TWILIO_PHONE_NUMBER, to=dest_phone)
+                    st.success(f"Sent! ID: {m.sid}")
+                except Exception as e:
+                    st.error(str(e))
+
+# --- 10. SIDEBAR & SIMULATION ---
+st.sidebar.header("Zone Analysis")
+if not selected_df.empty and "zone_name" in selected_df.columns:
+    zones = sorted(list(selected_df["zone_name"].dropna().unique()))
+    if zones:
+        ch = st.sidebar.selectbox("Inspect Zone", zones)
+        row = selected_df[selected_df["zone_name"] == ch].iloc[0]
+        st.sidebar.metric("Surge Score", f"{row['surge_score']:.2f}")
+        st.sidebar.caption(f"H3: {row['h3']}")
+
+if not reposition_df.empty:
+    st.markdown("---")
+    if st.button("▶️ Run Simulation"):
+        ph = st.empty()
+        for s in range(1, 21):
+            r = s/20
+            dots = [{"lon": d['from_lon'] + (d['to_lon']-d['from_lon'])*r, "lat": d['from_lat'] + (d['to_lat']-d['from_lat'])*r} for d in reposition_data]
+            sl = pdk.Layer("ScatterplotLayer", data=pd.DataFrame(dots), get_position=["lon", "lat"], get_radius=120, get_fill_color=[255, 215, 0, 255])
+            ph.pydeck_chart(pdk.Deck(layers=layers+[sl], initial_view_state=view_state, map_style="mapbox://styles/mapbox/dark-v10"))
+            time.sleep(0.04)
