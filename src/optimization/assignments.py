@@ -56,22 +56,32 @@ def calculate_trip_fare(distance_km: float, vehicle_type="auto") -> float:
         return fare
 
 
-def fairness_score(driver_id, zone_id, driver_history, zone_demand):
+def fairness_score(driver_id, driver_history):
     """
-    Compute fairness score: favors drivers with lower recent total earnings or fewer surges.
-    
-    Relies on get_driver_history_final format: 
-    {"total_earnings": X, "recent_surge_assignments": Y}
+    Compute fairness score normalized between 1 and 10.
+    Higher Score = Higher Priority for this driver (e.g., low earnings).
     """
     driver_data = driver_history.get(driver_id, {"total_earnings": 0, "recent_surge_assignments": 0})
     
-    # Invert relationship: lower earnings/surges result in higher fairness score (lower cost penalty)
-    earnings_penalty = 1.0 / (1.0 + driver_data["total_earnings"] / 1000)
-    surge_penalty = 1.0 / (1.0 + driver_data["recent_surge_assignments"])
+    # 1. Earnings Factor (0.0 to 1.0)
+    # Higher earnings -> Lower factor (Penalty)
+    # Tuned with / 10000.0 for a gentle penalty
+    earnings_factor = 1.0 / (1.0 + driver_data["total_earnings"] / 10000.0)
     
-    # Combined score, weighted by potential demand (zone_demand + 1)
-    score = (earnings_penalty * surge_penalty) * (zone_demand + 1)
-    return score
+    # 2. Surge Factor (0.0 to 1.0)
+    # More recent surges -> Lower factor (Penalty)
+    # Tuned with * 0.5 for a gentle penalty
+    surge_factor = 1.0 / (1.0 + driver_data["recent_surge_assignments"] * 0.5)
+    
+    # Combined Average (0.0 to 1.0)
+    avg_metric = (earnings_factor + surge_factor) / 2.0
+    
+    # Scale to 1-10 Range
+    # 1.0 = Driver has earned a lot recently (Low Priority)
+    # 10.0 = Driver hasn't earned much (High Priority)
+    final_score = 1.0 + (avg_metric * 9.0)
+    
+    return final_score
 
 
 # ------------------------
@@ -105,6 +115,7 @@ def build_cost_matrix(drivers, zones, forecast_map, anomaly_flags, driver_histor
     # Profit Cost Term: Low Cost = High Demand/Priority (Normalization)
     max_priority = np.max(priority)
     ptp_priority = np.ptp(priority) + 1e-5
+    # This is a 1D array of costs for each ZONE
     profit_cost_term = (max_priority - priority) / ptp_priority
     
     # --- 2. Build Multi-Objective Cost Matrix ---
@@ -115,11 +126,16 @@ def build_cost_matrix(drivers, zones, forecast_map, anomaly_flags, driver_histor
                      for i, d in enumerate(drivers) for dist in eco_data[i]]
     max_emission = max(all_emissions) if all_emissions else 1.0
     
-    all_fairs = [fairness_score(d["id"], z, driver_history, p) 
-                 for d in drivers for z, p in zip(zones, priority)]
-    max_fair = max(all_fairs) if all_fairs else 1.0
-    
+    # Pre-calculate fairness scores (1D array for each DRIVER)
+    all_fairs = np.array([fairness_score(d["id"], driver_history) for d in drivers])
+    max_fair = np.max(all_fairs) if all_fairs.size > 0 else 10.0
+    # Invert: High Fairness Score = Low Cost (Priority)
+    fair_cost_term_driver = (max_fair - all_fairs) / (max_fair + 1e-5)
+
     for i, driver in enumerate(drivers):
+        # Get the pre-calculated fairness cost for this driver
+        fair_cost = fair_cost_term_driver[i]
+            
         for j, zone_id in enumerate(zones):
             dist_km = float(eco_data[i, j])
             
@@ -127,15 +143,14 @@ def build_cost_matrix(drivers, zones, forecast_map, anomaly_flags, driver_histor
             emission_kg = calculate_emission(dist_km, driver.get("vehicle_type", "auto"))
             eco_cost_term = emission_kg / (max_emission + 1e-5) 
             
-            # Fairness Cost Term (Minimize Cost = Maximize Fairness Score)
-            fair = fairness_score(driver["id"], zone_id, driver_history, priority[j])
-            fair_cost_term = (max_fair - fair) / (max_fair + 1e-5)
-            
             # Weighted Sum of Costs (Minimize total cost)
+            # profit_cost_term[j] = Zone cost
+            # eco_cost_term = Driver-Zone cost
+            # fair_cost = Driver cost
             cost_matrix[i, j] = (
                 weights["w_profit"] * profit_cost_term[j] + 
                 weights["w_eco"] * eco_cost_term + 
-                weights["w_fair"] * fair_cost_term
+                weights["w_fair"] * fair_cost
             )
             
     return cost_matrix
@@ -148,39 +163,84 @@ def assign_drivers(drivers, zones, forecast_df, anomaly_flags, driver_history, e
     """
     Performs multi-objective assignment using the Hungarian algorithm.
     """
-    # Convert forecast DataFrame to Map for quick lookup
     forecast_map = forecast_df.set_index('h3_index')['pred_bookings_15min'].to_dict()
-    
     cost_matrix = build_cost_matrix(drivers, zones, forecast_map, anomaly_flags, driver_history, eco_data, weights)
     
-    # Hungarian assignment
     row_ind, col_ind = linear_sum_assignment(cost_matrix)
 
     results = []
+    # Assumed average ride length for profit estimation
+    AVG_TRIP_DIST_KM = 8.0 
+    
     for i, j in zip(row_ind, col_ind):
         driver = drivers[i]
         zone = zones[j]
         
-        # Calculate final metrics for output logging
-        dist_km = float(eco_data[i, j]) 
+        # Get Driver History for Display
+        d_hist = driver_history.get(driver["id"], {})
+        total_earnings = d_hist.get("total_earnings", 0)
+        recent_surges = d_hist.get("recent_surge_assignments", 0)
+
+        # Get assignment metrics
+        reposition_dist_km = float(eco_data[i, j]) 
         vehicle_type = driver.get("vehicle_type", "auto")
-        emission_kg = calculate_emission(dist_km, vehicle_type=vehicle_type)
+        emission_kg = calculate_emission(reposition_dist_km, vehicle_type=vehicle_type)
+        
+        # Get zone demand
         trips_est = forecast_map.get(zone, 0)
-        fare_per_trip = calculate_trip_fare(dist_km, vehicle_type=vehicle_type)
-        profit_est = trips_est * fare_per_trip 
-        current_fairness = fairness_score(driver["id"], zone, driver_history, trips_est)
+        
+        # --- NEW PROFIT CALCULATION ---
+        # 1. Base fare for an average 8km trip
+        base_trip_fare = calculate_trip_fare(AVG_TRIP_DIST_KM, vehicle_type=vehicle_type)
+        
+        # 2. Dynamic Surge Multiplier (1.0x to 1.5x)
+        # We define surge as starting when demand > 20, maxing out at 1.5x
+        surge_multiplier = 1.0 + min(0.5, max(0, (trips_est - 20) / 200.0))
+        
+        # 3. Estimated profit for ONE trip
+        profit_est = base_trip_fare * surge_multiplier
+        
+        # Get fairness score (1-10)
+        current_fairness = fairness_score(driver["id"], driver_history)
 
         results.append({
             "driver_id": driver["id"],
             "assigned_zone": zone,
             "forecasted_demand": round(trips_est, 2),
             "estimated_profit": round(profit_est, 2),
-            "fairness_score": round(current_fairness, 4),
-            "repositioning_distance_km": round(dist_km, 2),
-            "emission_kg": round(emission_kg, 4)
+            "fairness_score": round(current_fairness, 2), # Rounded
+            "repositioning_distance_km": round(reposition_dist_km, 2),
+            "emission_kg": round(emission_kg, 4),
+            "total_earnings": total_earnings,
+            "recent_surges": recent_surges,
+            # NEW: Add surge multiplier to the results
+            "surge_multiplier": round(surge_multiplier, 2)
         })
 
     df = pd.DataFrame(results)
+    
+    # --- UPDATED LOGGING BLOCK ---
+    if not df.empty:
+        logger.info("\n" + "="*60)
+        logger.info(f"  REPOSITIONING PLAN PREVIEW (Top 5 of {len(df)})")
+        logger.info("="*60)
+        
+        # FIX: Sort by 'forecasted_demand' to see the *real* surge zones
+        top_moves = df.sort_values(by="forecasted_demand", ascending=False).head(5)
+        
+        for _, row in top_moves.iterrows():
+            # Get the correct surge multiplier for this row
+            surge_mult = row['surge_multiplier']
+            logger.info(
+                f"Driver {row['driver_id']} -> {row['assigned_zone']} (Demand: {row['forecasted_demand']})\n"
+                f"   |-- Profit Potential: INR {row['estimated_profit']:.2f} (1 Trip, {surge_mult:.1f}x surge)\n"
+                f"   |-- Emissions: {row['emission_kg']} kg CO2\n"
+                f"   |-- Fairness Score: {row['fairness_score']} / 10.0\n"
+                f"   |-- Driver Stats: Earnings=INR {row['total_earnings']:.0f}, Surges={row['recent_surges']}\n"
+            )
+        logger.info("="*60 + "\n")
+    # -----------------------------------------------
+
     logger.info("Assignments completed: %d drivers assigned.", len(df))
     return df
 
@@ -192,7 +252,6 @@ PREDICTION_PATH = 'datasets/forecast_15min_predictions.csv'
 def get_repositioning_plan():
     """
     Wrapper to fetch all necessary data inputs and execute assign_drivers.
-    (Called directly by src/pipeline/run_pipeline.py)
     """
     logger.info("Fetching inputs for Repositioning Plan generation...")
     

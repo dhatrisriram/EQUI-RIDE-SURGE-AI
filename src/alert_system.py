@@ -1,156 +1,157 @@
 """
-EquiRide Surge AI - Forecast-Based Alert System (Standalone + Compatible)
+EquiRide Surge AI - Forecast-Based Alert System (Multi-Recipient Support)
 Reads ONLY datasets/forecast_15min_predictions.csv for surge alerts.
 """
 
 import os
 import sys
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime
 from dotenv import load_dotenv
 
-# Ensure project paths are resolvable (Fixed typo in __file__)
+# ---------------- FIX IMPORT PATH ----------------
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, os.pardir))
+PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.append(PROJECT_ROOT)
+# --------------------------------------------------
 
 from config.logging_config import setup_logging, log_stage
-from src.utils import _resolve_project_path
 
 # Load environment variables
 load_dotenv()
 
 class AlertSystem:
-    # --- FIX 1: Corrected constructor name from _init_ to __init__ ---
     def __init__(self, config, logger=None):
         """Initialize Alert System"""
         self.config = config
         self.logger = logger or setup_logging()
-        self.module_name = "AlertSystem"
-        
         self.twilio_enabled = config.get('twilio', {}).get('enabled', False)
         self.alert_cooldown = config.get('alerts', {}).get('alert_cooldown_minutes', 30)
         self.last_alert_time = {}
-        self.twilio_client = None
 
         if self.twilio_enabled:
             self._initialize_twilio()
         else:
-            self.logger.info("Twilio alerts disabled in config.")
+            self.logger.info("Twilio alerts disabled in config")
 
     def _initialize_twilio(self):
-        """Initialize Twilio client"""
+        """Initialize Twilio client for multiple recipients"""
         try:
             from twilio.rest import Client
-            
-            # Use os.getenv as intended
             account_sid = os.getenv('TWILIO_ACCOUNT_SID')
             auth_token = os.getenv('TWILIO_AUTH_TOKEN')
             self.twilio_phone = os.getenv('TWILIO_PHONE_NUMBER')
-            self.alert_phone = os.getenv('ALERT_PHONE_NUMBER') # Target phone number for the operator
+            
+            # --- MULTI-RECIPIENT LOGIC ---
+            # Read the string, split by comma, and strip whitespace
+            phones_env = os.getenv('ALERT_PHONE_NUMBER', "")
+            self.alert_phones = [p.strip() for p in phones_env.split(',') if p.strip()]
 
-            if not all([account_sid, auth_token, self.twilio_phone, self.alert_phone]):
-                self.logger.warning("Twilio credentials missing or incomplete in .env. SMS disabled.")
+            if not all([account_sid, auth_token, self.twilio_phone, self.alert_phones]):
+                self.logger.warning("Twilio credentials incomplete or no alert numbers found. SMS disabled.")
                 self.twilio_enabled = False
                 return
 
             self.twilio_client = Client(account_sid, auth_token)
-            self.logger.info("SUCCESS Twilio client initialized successfully.")
+            self.logger.info(f"SUCCESS Twilio initialized for {len(self.alert_phones)} recipients.")
 
-        except ImportError:
-            self.logger.error("FAILED Twilio client initialization: 'twilio' library not found. SMS disabled.")
-            self.twilio_enabled = False
         except Exception as e:
-            self.logger.error(f"FAILED Twilio initialization failed: {str(e)}. SMS disabled.")
+            self.logger.error(f"FAILED Twilio initialization failed: {str(e)}")
             self.twilio_enabled = False
 
     # ===================================================================
     # COOLDOWN CHECK
     # ===================================================================
     def check_alert_cooldown(self, area_name):
-        """Checks if a specific area is still within the alert cooldown period."""
         if area_name not in self.last_alert_time:
             return True
-        
         time_since_last = datetime.now() - self.last_alert_time[area_name]
-        # Cooldown in seconds
-        cooldown_duration = self.alert_cooldown * 60
-        return time_since_last.total_seconds() > cooldown_duration
+        return time_since_last.total_seconds() > (self.alert_cooldown * 60)
 
     # ===================================================================
     # SEND SMS
     # ===================================================================
     def send_sms_alert(self, message, area_name):
-        """Send SMS via Twilio"""
+        """Send SMS via Twilio to ALL recipients"""
         if not self.twilio_enabled:
-            # Use logger.warning for high-visibility output when SMS is disabled
-            self.logger.warning(f"[ALERT - SMS DISABLED] {area_name}: {message.splitlines()[1].strip()}")
+            safe_msg = message.encode("ascii", "ignore").decode()
+            self.logger.info(f"[ALERT - SMS DISABLED] {safe_msg}")
             return False
 
         if not self.check_alert_cooldown(area_name):
             self.logger.info(f"Cooldown active for {area_name}. Skipping SMS.")
             return False
 
+        success_count = 0
         try:
-            msg = self.twilio_client.messages.create(
-                body=message,
-                from_=self.twilio_phone,
-                to=self.alert_phone
-            )
-            self.last_alert_time[area_name] = datetime.now()
-            self.logger.info(f"SUCCESS SMS sent to {self.alert_phone}. SID: {msg.sid}")
-            return True
+            # Loop through every number in the list
+            for phone in self.alert_phones:
+                try:
+                    msg = self.twilio_client.messages.create(
+                        body=message,
+                        from_=self.twilio_phone,
+                        to=phone
+                    )
+                    success_count += 1
+                except Exception as e:
+                    self.logger.error(f"Failed sending to {phone}: {str(e)}")
+
+            if success_count > 0:
+                self.last_alert_time[area_name] = datetime.now()
+                self.logger.info(f"SUCCESS SMS sent to {success_count}/{len(self.alert_phones)} recipients.")
+                return True
+            return False
 
         except Exception as e:
-            self.logger.error(f"FAILED SMS send error for {area_name}: {str(e)}")
+            self.logger.error(f"FAILED SMS send error: {str(e)}")
             return False
 
     # ===================================================================
     # FORECAST CSV LOADING
     # ===================================================================
     def load_forecast_data(self, csv_path="datasets/forecast_15min_predictions.csv"):
-        """Loads the forecast CSV, ensuring the correct columns are present."""
         try:
-            # Use the global resolver utility for path consistency
-            full_path = _resolve_project_path(csv_path) 
-            df = pd.read_csv(full_path)
-
+            df = pd.read_csv(csv_path)
+            # Normalize columns just in case
+            df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
+            
+            # Check for normalized names
             required = ["h3_index", "next_time", "pred_bookings_15min"]
             if not all(col in df.columns for col in required):
-                raise ValueError("CSV must contain: h3_index, next_time, pred_bookings_15min")
-
+                # Fallback check for old names
+                rename_map = {'h3': 'h3_index', 'pred_bookings': 'pred_bookings_15min'}
+                df = df.rename(columns=rename_map)
+                
             return df
-
         except Exception as e:
             self.logger.error(f"FAILED to load forecast CSV: {str(e)}")
             return pd.DataFrame()
 
     # ===================================================================
-    # FORECAST-BASED SURGE DETECTION
+    # FORECAST-BASED SURGE DETECTION (TOP 5 DEMO LOGIC)
     # ===================================================================
     def calculate_forecast_surges(self, df):
-        """Calculates which zones are experiencing a predicted surge (2-sigma threshold)."""
         try:
             log_stage(self.logger, "CHECK_FORECAST_SURGE", "START")
             
-            # --- Detection Logic: 2-Sigma Threshold ---
-            # Use mean and standard deviation of predicted bookings across all zones
-            mean = df["pred_bookings_15min"].mean()
-            std = df["pred_bookings_15min"].std()
-
-            # Set threshold to 2 standard deviations above the mean (A common anomaly/surge definition)
-            threshold = mean + 2 * std 
-
-            # Filter rows that exceed the surge prediction threshold
-            surge_rows = df[df["pred_bookings_15min"] > threshold]
+            # Sort by demand to find the biggest hotspots
+            if "pred_bookings_15min" not in df.columns:
+                return []
+                
+            surge_rows = df.sort_values(by="pred_bookings_15min", ascending=False).head(5)
+            
+            # Basic filter to avoid alerting on 0 demand
+            surge_rows = surge_rows[surge_rows["pred_bookings_15min"] > 20]
 
             alerts = []
+            max_val = surge_rows["pred_bookings_15min"].max() if not surge_rows.empty else 100
+
             for _, row in surge_rows.iterrows():
                 alerts.append({
                     "h3_index": row["h3_index"],
-                    "area_name": row["h3_index"], # Use h3_index as area name for simplicity
-                    "severity": self._calculate_severity(row["pred_bookings_15min"], mean, std),
+                    "area_name": row.get("h3_index", "Unknown Zone"),
+                    "severity": "CRITICAL" if row["pred_bookings_15min"] >= max_val * 0.9 else "HIGH",
                     "pred_bookings": row["pred_bookings_15min"],
                     "next_time": row["next_time"],
                     "timestamp": datetime.now().isoformat()
@@ -163,58 +164,47 @@ class AlertSystem:
             log_stage(self.logger, "CHECK_FORECAST_SURGE", "FAILURE", error=str(e))
             return []
 
-    def _calculate_severity(self, val, mean, std):
-        """Helper to assign severity based on distance from the mean."""
-        if val > mean + 3 * std:
-            return "CRITICAL"
-        elif val > mean + 2.5 * std:
-            return "HIGH"
-        else:
-            return "MEDIUM"
-
     # ===================================================================
     # MESSAGE FORMATTING
     # ===================================================================
     def format_forecast_alert_message(self, alert):
-        """Formats a clean, concise message for SMS/console output."""
         msg = f"""
-PREDICTED SURGE ALERT
+🚨 EQUI-RIDE SURGE ALERT 🚨
 
-H3 Zone: {alert['h3_index']}
-Severity: {alert['severity']}
-Predicted Bookings (next 15 min): {alert['pred_bookings']:.1f}
-Forecast Time: {alert['next_time']}
+📍 Zone: {alert['h3_index']}
+⚠️ Level: {alert['severity']}
+📈 Demand: {alert['pred_bookings']:.0f} bookings
+⏰ Time: {alert['next_time']}
 
-Action: Deploy drivers from optimized repositioning plan.
+Dispatch Action Required immediately.
 """
         return msg.strip()
 
     # ===================================================================
-    # PROCESS FORECAST ALERTS (MAIN ENTRY POINT)
+    # PROCESS FORECAST ALERTS
     # ===================================================================
     def process_forecast_alerts(self, csv_path="datasets/forecast_15min_predictions.csv"):
-        """Main function to trigger alert calculation and dispatch."""
         try:
             df = self.load_forecast_data(csv_path)
 
             if df.empty:
-                self.logger.info("No forecast data to process alerts.")
+                self.logger.info("No forecast data → No alerts.")
                 return 0
 
             alerts = self.calculate_forecast_surges(df)
 
             if len(alerts) == 0:
-                self.logger.info("No forecast surge detected above threshold.")
+                self.logger.info("No forecast surge detected.")
                 return 0
 
             sent = 0
             for alert in alerts:
                 msg = self.format_forecast_alert_message(alert)
-                # Use send_sms_alert (which includes the cooldown check)
-                if self.send_sms_alert(msg, alert["h3_index"]): 
+                # This returns True if at least one SMS was sent successfully
+                if self.send_sms_alert(msg, alert["h3_index"]):
                     sent += 1
 
-            log_stage(self.logger, "PROCESS_FORECAST_ALERTS", "SUCCESS", alerts_sent=sent)
+            log_stage(self.logger, "PROCESS_FORECAST_ALERTS", "SUCCESS", sent=sent)
             return sent
 
         except Exception as e:
